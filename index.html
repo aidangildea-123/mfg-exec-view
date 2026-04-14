@@ -4,15 +4,15 @@
     .then(reports => {
       const select = document.getElementById('reportSelect');
 
-      // newest first (optional)
-      reports.reverse().forEach(report => {
+      const newestFirst = [...reports].reverse();
+
+      newestFirst.forEach(report => {
         const option = document.createElement('option');
         option.value = `./reports/${report.file}`;
         option.textContent = report.label;
         select.appendChild(option);
       });
 
-      // auto-load latest
       if (reports.length > 0) {
         const latest = reports[reports.length - 1];
         const path = `./reports/${latest.file}`;
