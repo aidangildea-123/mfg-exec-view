@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MFG Daily Sales — 2026-04-13</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans","Helvetica Neue",Helvetica,sans-serif;background:#f4f5f7;min-height:100vh;padding-bottom:48px;color:#111827}
+
+/* Header */
+.header{background:#fff;border-bottom:1px solid #e5e7eb;padding:14px 16px 12px}
+.header h1{font-size:22px;font-weight:700;letter-spacing:-0.03em}
+.header .sub{font-size:11px;color:#9ca3af;margin-top:3px}
+
+/* Controls */
+.controls{background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.controls select{padding:7px 10px;font-size:12px;border:1px solid #d1d5db;border-radius:6px;background:#fff;color:#374151;font-family:inherit;flex:1 1 160px;min-width:0}
+
+/* MFG total */
+.mfg-total{background:#fff;border-bottom:1px solid #e5e7eb;padding:16px}
+.mfg-total .label{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px}
+.mfg-blocks{display:flex;gap:32px;flex-wrap:wrap}
+.mfg-block .bl{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px}
+.mfg-block .bv{font-size:26px;font-weight:700;color:#111827;letter-spacing:-0.03em;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums}
+.mfg-badges{display:flex;gap:6px;flex-wrap:wrap}
+.mfg-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;display:inline-block}
+.mfg-divider{width:1px;background:#e5e7eb;align-self:stretch}
+
+/* Region cards */
+.region-card{margin:16px 12px 0;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.region-header{padding:10px 0 10px 16px}
+.region-title-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.region-pip{width:3px;height:14px;border-radius:2px;flex-shrink:0}
+.region-name{font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase}
+
+/* Column headers */
+.col-headers{display:flex;padding:5px 16px;background:#f9fafb;border-bottom:1px solid #e5e7eb;border-top:1px solid #e5e7eb}
+.ch{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#9ca3af}
+
+/* Data rows */
+.data-row{display:flex;align-items:center}
+.locs-wrap{background:#fff}
+.col-name{width:40%;padding-right:8px}
+.col-val{flex:1;text-align:right;font-variant-numeric:tabular-nums;font-size:11px}
+.col-dim{color:#9ca3af}
+.loc-name{font-size:13px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:2px}
+.row-label{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase}
+
+/* Footer */
+.footer{padding:16px;text-align:center;font-size:10px;color:#d1d5db;letter-spacing:0.04em}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Daily Sales</h1>
+  <div class="sub">2026-04-13 &nbsp;·&nbsp; WoW vs 2026-04-06 &nbsp;·&nbsp; YoY vs 2025-04-14</div>
+</div>
+
+<div class="controls">
+  <select onchange="document.getElementById(this.value)?.scrollIntoView({behavior:'smooth',block:'center'})">
+    <option value="">Jump to location…</option>
+    <optgroup label="Northeast"><option value="loc-Carbone-New-York">Carbone New York</option><option value="loc-Clam-Bar">Clam Bar</option><option value="loc-Contessa-Boston">Contessa Boston</option><option value="loc-Dirty-French-New-York">Dirty French New York</option><option value="loc-Sadelles-New-York">Sadelle's New York</option><option value="loc-THE-GRILL---THE-POOL">THE GRILL / THE POOL</option><option value="loc-The-Lobster-Club">The Lobster Club</option><option value="loc-Torrisi">Torrisi</option></optgroup><optgroup label="Southeast"><option value="loc-Carbone-Miami">Carbone Miami</option><option value="loc-Carbone-Vino-Coconut-Grove">Carbone Vino Coconut Grove</option><option value="loc-Chateau-ZZs">Chateau ZZ's</option><option value="loc-Contessa-Miami">Contessa Miami</option><option value="loc-Dirty-French-Steakhouse">Dirty French Steakhouse</option><option value="loc-HaSalon">HaSalon</option><option value="loc-Sadelles-Coconut-Grove">Sadelle's Coconut Grove</option><option value="loc-ZZs-Club-Miami">ZZ's Club Miami</option></optgroup><optgroup label="Southwest"><option value="loc-Carbone-Dallas">Carbone Dallas</option><option value="loc-Sadelles-Highland-Park">Sadelle's Highland Park</option><option value="loc-Vino-Dallas">Vino Dallas</option></optgroup><optgroup label="International"><option value="loc-Carbone-London">Carbone London</option></optgroup><optgroup label="Parm"><option value="loc-Parm-Battery-Park">Parm Battery Park</option><option value="loc-Parm-Copley">Parm Copley</option><option value="loc-Parm-Mulberry">Parm Mulberry</option><option value="loc-Parm-Upper-West">Parm Upper West</option><option value="loc-Parm-Woodbury">Parm Woodbury</option></optgroup>
+  </select>
+</div>
+
+<div class="mfg-total">
+  <div class="label">MFG Total &nbsp;·&nbsp; 2026-04-13</div>
+  <div class="mfg-blocks">
+    <div class="mfg-block">
+      <div class="bl">Sales</div>
+      <div class="bv">$701,691</div>
+      <div class="mfg-badges">
+        <span class="mfg-badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">+26% WoW</span>
+        <span class="mfg-badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">+50% YoY</span>
+      </div>
+    </div>
+    <div class="mfg-divider"></div>
+    <div class="mfg-block">
+      <div class="bl">Covers</div>
+      <div class="bv">3,282</div>
+      <div class="mfg-badges">
+        <span class="mfg-badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fecaca">(14%) WoW</span>
+        <span class="mfg-badge" style="background:#fee2e2;color:#b91c1c;border:1px solid #fecaca">(2%) YoY</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="region-card">
+  <div class="region-header" style="background:#eff6ff;border-bottom:1px solid #bfdbfe">
+    <div class="region-title-row">
+      <div class="region-pip" style="background:#1d4ed8"></div>
+      <span class="region-name" style="color:#1d4ed8">Northeast</span>
+    </div>
+    <div class="data-row" style="padding:8px 16px 3px 0">
+      <div class="col-name"><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+      <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$412,678</div>
+      <div class="col-val col-dim">$287,096</div>
+      <div class="col-val" style="color:#15803d;font-weight:600">+44%</div>
+      <div class="col-val col-dim">$229,741</div>
+      <div class="col-val" style="color:#15803d;font-weight:600">+80%</div>
+    </div>
+    <div class="data-row" style="padding:3px 16px 8px 0">
+      <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+      <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">1,573</div>
+      <div class="col-val col-dim">1,517</div>
+      <div class="col-val" style="color:#15803d;font-weight:600">+4%</div>
+      <div class="col-val col-dim">1,817</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(13%)</div>
+    </div>
+  </div>
+  <div class="col-headers">
+    <div class="col-name ch">Location</div>
+    <div class="col-val ch">Current</div>
+    <div class="col-val ch">Pr Wk</div>
+    <div class="col-val ch">WoW</div>
+    <div class="col-val ch">Pr Yr</div>
+    <div class="col-val ch">YoY</div>
+  </div>
+  <div class="locs-wrap"><div id="loc-Carbone-New-York" style=""><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Carbone New York</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$47,071</div>
+  <div class="col-val col-dim">$42,000</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+12%</div>
+  <div class="col-val col-dim">$37,094</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+27%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">203</div>
+  <div class="col-val col-dim">94</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+116%</div>
+  <div class="col-val col-dim">208</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(2%)</div>
+</div></div><div id="loc-Clam-Bar" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Clam Bar</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#d1d5db">—</div>
+  <div class="col-val col-dim">$5,460</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#d1d5db">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div><div id="loc-Contessa-Boston" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Contessa Boston</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$51,083</div>
+  <div class="col-val col-dim">$47,204</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+8%</div>
+  <div class="col-val col-dim">$44,806</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+14%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">427</div>
+  <div class="col-val col-dim">452</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(6%)</div>
+  <div class="col-val col-dim">515</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(17%)</div>
+</div></div><div id="loc-Dirty-French-New-York" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Dirty French New York</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#d1d5db">—</div>
+  <div class="col-val col-dim">$11,964</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">$9,715</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">34</div>
+  <div class="col-val col-dim">35</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(3%)</div>
+  <div class="col-val col-dim">93</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(63%)</div>
+</div></div><div id="loc-Sadelles-New-York" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Sadelle's New York</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$60,135</div>
+  <div class="col-val col-dim">$18,150</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+231%</div>
+  <div class="col-val col-dim">$18,464</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+226%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">313</div>
+  <div class="col-val col-dim">415</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(25%)</div>
+  <div class="col-val col-dim">453</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(31%)</div>
+</div></div><div id="loc-THE-GRILL---THE-POOL" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">THE GRILL / THE POOL</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$168,367</div>
+  <div class="col-val col-dim">$93,120</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+81%</div>
+  <div class="col-val col-dim">$58,271</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+189%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">195</div>
+  <div class="col-val col-dim">198</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(2%)</div>
+  <div class="col-val col-dim">225</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(13%)</div>
+</div></div><div id="loc-The-Lobster-Club" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">The Lobster Club</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$36,751</div>
+  <div class="col-val col-dim">$23,587</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+56%</div>
+  <div class="col-val col-dim">$24,023</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+53%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">190</div>
+  <div class="col-val col-dim">122</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+56%</div>
+  <div class="col-val col-dim">119</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+60%</div>
+</div></div><div id="loc-Torrisi" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Torrisi</div><div class="row-label" style="color:#1d4ed8">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$49,272</div>
+  <div class="col-val col-dim">$45,611</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+8%</div>
+  <div class="col-val col-dim">$37,367</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+32%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">211</div>
+  <div class="col-val col-dim">201</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+5%</div>
+  <div class="col-val col-dim">204</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+3%</div>
+</div></div></div>
+</div><div class="region-card">
+  <div class="region-header" style="background:#f0fdf4;border-bottom:1px solid #a7f3d0">
+    <div class="region-title-row">
+      <div class="region-pip" style="background:#059669"></div>
+      <span class="region-name" style="color:#059669">Southeast</span>
+    </div>
+    <div class="data-row" style="padding:8px 16px 3px 0">
+      <div class="col-name"><div class="row-label" style="color:#059669">Sales</div></div>
+      <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$193,482</div>
+      <div class="col-val col-dim">$149,522</div>
+      <div class="col-val" style="color:#15803d;font-weight:600">+29%</div>
+      <div class="col-val col-dim">$164,400</div>
+      <div class="col-val" style="color:#15803d;font-weight:600">+18%</div>
+    </div>
+    <div class="data-row" style="padding:3px 16px 8px 0">
+      <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+      <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">1,079</div>
+      <div class="col-val col-dim">1,395</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(23%)</div>
+      <div class="col-val col-dim">1,160</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(7%)</div>
+    </div>
+  </div>
+  <div class="col-headers">
+    <div class="col-name ch">Location</div>
+    <div class="col-val ch">Current</div>
+    <div class="col-val ch">Pr Wk</div>
+    <div class="col-val ch">WoW</div>
+    <div class="col-val ch">Pr Yr</div>
+    <div class="col-val ch">YoY</div>
+  </div>
+  <div class="locs-wrap"><div id="loc-Carbone-Miami" style=""><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Carbone Miami</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$61,514</div>
+  <div class="col-val col-dim">$65,018</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(5%)</div>
+  <div class="col-val col-dim">$64,105</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(4%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">483</div>
+  <div class="col-val col-dim">576</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(16%)</div>
+  <div class="col-val col-dim">496</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(3%)</div>
+</div></div><div id="loc-Carbone-Vino-Coconut-Grove" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Carbone Vino Coconut Grove</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$23,074</div>
+  <div class="col-val col-dim">$27,182</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(15%)</div>
+  <div class="col-val col-dim">$24,958</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(8%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">174</div>
+  <div class="col-val col-dim">222</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(22%)</div>
+  <div class="col-val col-dim">202</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(14%)</div>
+</div></div><div id="loc-Chateau-ZZs" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Chateau ZZ's</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$66,967</div>
+  <div class="col-val col-dim">$12,988</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+416%</div>
+  <div class="col-val col-dim">$19,032</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+252%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#d1d5db">—</div>
+  <div class="col-val col-dim">70</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">91</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div><div id="loc-Contessa-Miami" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Contessa Miami</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$15,941</div>
+  <div class="col-val col-dim">$18,878</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(16%)</div>
+  <div class="col-val col-dim">$22,161</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(28%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">184</div>
+  <div class="col-val col-dim">225</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(18%)</div>
+  <div class="col-val col-dim">125</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+47%</div>
+</div></div><div id="loc-Dirty-French-Steakhouse" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Dirty French Steakhouse</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$7,279</div>
+  <div class="col-val col-dim">$5,628</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+29%</div>
+  <div class="col-val col-dim">$7,942</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(8%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">42</div>
+  <div class="col-val col-dim">39</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+8%</div>
+  <div class="col-val col-dim">40</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+5%</div>
+</div></div><div id="loc-HaSalon" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">HaSalon</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#d1d5db">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">$9,676</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#d1d5db">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div><div id="loc-Sadelles-Coconut-Grove" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Sadelle's Coconut Grove</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$5,806</div>
+  <div class="col-val col-dim">$9,262</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(37%)</div>
+  <div class="col-val col-dim">$7,691</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(25%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">123</div>
+  <div class="col-val col-dim">202</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(39%)</div>
+  <div class="col-val col-dim">146</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(16%)</div>
+</div></div><div id="loc-ZZs-Club-Miami" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">ZZ's Club Miami</div><div class="row-label" style="color:#059669">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$12,901</div>
+  <div class="col-val col-dim">$10,566</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+22%</div>
+  <div class="col-val col-dim">$8,836</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+46%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">73</div>
+  <div class="col-val col-dim">61</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+20%</div>
+  <div class="col-val col-dim">60</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+22%</div>
+</div></div></div>
+</div><div class="region-card">
+  <div class="region-header" style="background:#fffbeb;border-bottom:1px solid #fde68a">
+    <div class="region-title-row">
+      <div class="region-pip" style="background:#d97706"></div>
+      <span class="region-name" style="color:#d97706">Southwest</span>
+    </div>
+    <div class="data-row" style="padding:8px 16px 3px 0">
+      <div class="col-name"><div class="row-label" style="color:#d97706">Sales</div></div>
+      <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$22,610</div>
+      <div class="col-val col-dim">$24,417</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(7%)</div>
+      <div class="col-val col-dim">$11,342</div>
+      <div class="col-val" style="color:#15803d;font-weight:600">+99%</div>
+    </div>
+    <div class="data-row" style="padding:3px 16px 8px 0">
+      <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+      <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">233</div>
+      <div class="col-val col-dim">267</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(13%)</div>
+      <div class="col-val col-dim">361</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(35%)</div>
+    </div>
+  </div>
+  <div class="col-headers">
+    <div class="col-name ch">Location</div>
+    <div class="col-val ch">Current</div>
+    <div class="col-val ch">Pr Wk</div>
+    <div class="col-val ch">WoW</div>
+    <div class="col-val ch">Pr Yr</div>
+    <div class="col-val ch">YoY</div>
+  </div>
+  <div class="locs-wrap"><div id="loc-Carbone-Dallas" style=""><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Carbone Dallas</div><div class="row-label" style="color:#d97706">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$12,106</div>
+  <div class="col-val col-dim">$11,014</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+10%</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">90</div>
+  <div class="col-val col-dim">72</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+25%</div>
+  <div class="col-val col-dim">109</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(17%)</div>
+</div></div><div id="loc-Sadelles-Highland-Park" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Sadelle's Highland Park</div><div class="row-label" style="color:#d97706">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$8,852</div>
+  <div class="col-val col-dim">$11,135</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(21%)</div>
+  <div class="col-val col-dim">$11,342</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(22%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">131</div>
+  <div class="col-val col-dim">179</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(27%)</div>
+  <div class="col-val col-dim">212</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(38%)</div>
+</div></div><div id="loc-Vino-Dallas" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Vino Dallas</div><div class="row-label" style="color:#d97706">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$1,652</div>
+  <div class="col-val col-dim">$2,268</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(27%)</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">12</div>
+  <div class="col-val col-dim">16</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(25%)</div>
+  <div class="col-val col-dim">40</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(70%)</div>
+</div></div></div>
+</div><div class="region-card">
+  <div class="region-header" style="background:#f5f3ff;border-bottom:1px solid #ddd6fe">
+    <div class="region-title-row">
+      <div class="region-pip" style="background:#7c3aed"></div>
+      <span class="region-name" style="color:#7c3aed">International</span>
+    </div>
+    <div class="data-row" style="padding:8px 16px 3px 0">
+      <div class="col-name"><div class="row-label" style="color:#7c3aed">Sales</div></div>
+      <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$24,056</div>
+      <div class="col-val col-dim">$38,350</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(37%)</div>
+      <div class="col-val col-dim">$0</div>
+      <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+    </div>
+    <div class="data-row" style="padding:3px 16px 8px 0">
+      <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+      <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">166</div>
+      <div class="col-val col-dim">264</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(37%)</div>
+      <div class="col-val col-dim">0</div>
+      <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+    </div>
+  </div>
+  <div class="col-headers">
+    <div class="col-name ch">Location</div>
+    <div class="col-val ch">Current</div>
+    <div class="col-val ch">Pr Wk</div>
+    <div class="col-val ch">WoW</div>
+    <div class="col-val ch">Pr Yr</div>
+    <div class="col-val ch">YoY</div>
+  </div>
+  <div class="locs-wrap"><div id="loc-Carbone-London" style=""><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Carbone London</div><div class="row-label" style="color:#7c3aed">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$24,056</div>
+  <div class="col-val col-dim">$38,350</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(37%)</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">166</div>
+  <div class="col-val col-dim">264</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(37%)</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div></div>
+</div><div class="region-card">
+  <div class="region-header" style="background:#fef2f2;border-bottom:1px solid #fecaca">
+    <div class="region-title-row">
+      <div class="region-pip" style="background:#dc2626"></div>
+      <span class="region-name" style="color:#dc2626">Parm</span>
+    </div>
+    <div class="data-row" style="padding:8px 16px 3px 0">
+      <div class="col-name"><div class="row-label" style="color:#dc2626">Sales</div></div>
+      <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$48,865</div>
+      <div class="col-val col-dim">$57,763</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(15%)</div>
+      <div class="col-val col-dim">$62,070</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(21%)</div>
+    </div>
+    <div class="data-row" style="padding:3px 16px 8px 0">
+      <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+      <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">231</div>
+      <div class="col-val col-dim">373</div>
+      <div class="col-val" style="color:#b91c1c;font-weight:600">(38%)</div>
+      <div class="col-val col-dim">0</div>
+      <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+    </div>
+  </div>
+  <div class="col-headers">
+    <div class="col-name ch">Location</div>
+    <div class="col-val ch">Current</div>
+    <div class="col-val ch">Pr Wk</div>
+    <div class="col-val ch">WoW</div>
+    <div class="col-val ch">Pr Yr</div>
+    <div class="col-val ch">YoY</div>
+  </div>
+  <div class="locs-wrap"><div id="loc-Parm-Battery-Park" style=""><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Parm Battery Park</div><div class="row-label" style="color:#dc2626">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$13,722</div>
+  <div class="col-val col-dim">$12,962</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+6%</div>
+  <div class="col-val col-dim">$12,024</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+14%</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">95</div>
+  <div class="col-val col-dim">131</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(27%)</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div><div id="loc-Parm-Copley" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Parm Copley</div><div class="row-label" style="color:#dc2626">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$4,377</div>
+  <div class="col-val col-dim">$4,538</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(4%)</div>
+  <div class="col-val col-dim">$4,918</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(11%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">7</div>
+  <div class="col-val col-dim">6</div>
+  <div class="col-val" style="color:#15803d;font-weight:600">+17%</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div><div id="loc-Parm-Mulberry" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Parm Mulberry</div><div class="row-label" style="color:#dc2626">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$8,526</div>
+  <div class="col-val col-dim">$10,454</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(18%)</div>
+  <div class="col-val col-dim">$12,478</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(32%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#d1d5db">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div><div id="loc-Parm-Upper-West" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Parm Upper West</div><div class="row-label" style="color:#dc2626">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$18,646</div>
+  <div class="col-val col-dim">$22,535</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(17%)</div>
+  <div class="col-val col-dim">$26,331</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(29%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#374151">129</div>
+  <div class="col-val col-dim">236</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(45%)</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div><div id="loc-Parm-Woodbury" style="border-top:1px solid #f3f4f6;"><div class="data-row" style="border-top:1px solid #f3f4f6;padding:8px 16px 3px;">
+  <div class="col-name"><div class="loc-name">Parm Woodbury</div><div class="row-label" style="color:#dc2626">Sales</div></div>
+  <div class="col-val" style="font-size:13px;font-weight:700;color:#111827">$3,594</div>
+  <div class="col-val col-dim">$7,274</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(51%)</div>
+  <div class="col-val col-dim">$6,320</div>
+  <div class="col-val" style="color:#b91c1c;font-weight:600">(43%)</div>
+</div><div class="data-row" style="padding:3px 16px 8px;">
+  <div class="col-name"><div class="row-label" style="color:#9ca3af">Covers</div></div>
+  <div class="col-val" style="font-size:12px;font-weight:600;color:#d1d5db">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+  <div class="col-val col-dim">—</div>
+  <div class="col-val" style="color:#9ca3af;font-weight:600">—</div>
+</div></div></div>
+</div>
+
+<div class="footer">London converted at spot GBP rate &nbsp;·&nbsp; YoY = same weekday prior year (52 wks) &nbsp;·&nbsp; Generated 2026-04-13</div>
+
+</body>
+</html>
