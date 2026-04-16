@@ -391,7 +391,7 @@ def build_index():
 if __name__ == "__main__":
     target = date.today() - timedelta(days=1)
     # TEMP: hardcode to test a specific date — remove this line when done
-    target = date(2026, 4, 13)
+    target = date(2026, 4, 12)
     dc  = target.isoformat()
     dlw = (target - timedelta(weeks=1)).isoformat()
     dly = (target - timedelta(weeks=52)).isoformat()
