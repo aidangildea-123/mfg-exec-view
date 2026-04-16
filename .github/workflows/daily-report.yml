@@ -2,8 +2,12 @@ name: Daily MFG Sales Report
 
 on:
   schedule:
-    # Runs at 8:00 AM ET (13:00 UTC) every day
-    - cron: '0 13 * * *'
+    # 11:00 AM ET (16:00 UTC) — morning run, yesterday's final data
+    - cron: '0 16 * * *'
+    # 3:00 PM ET (20:00 UTC) — afternoon refresh of yesterday
+    - cron: '0 20 * * *'
+    # 8:00 PM ET (01:00 UTC next day) — evening refresh of yesterday
+    - cron: '0 1 * * *'
   workflow_dispatch:
     # Also allows manual trigger from the GitHub Actions UI
 
