@@ -203,22 +203,33 @@ def fetch_all(dc, dlw, dly, token):
 
 
 # ── Row builder ────────────────────────────────────────────────────────────────
+def get_sales(sub, dal, r, dk):
+    if r["dallas"]:
+        d = dal.get(dk, {})
+        return (d["v"] if r["dType"] == "vino" else d["c"]) if d.get("ok") else None
+    else:
+        ids = r["ids"]
+        t = sum(sub.get(i, {}).get(dk, 0) for i in ids)
+        return t if any(sub.get(i, {}).get(dk) is not None for i in ids) else None
+
+def get_covers(cm, r, dk):
+    ids = r["ids"]; cc = r["cc"]
+    t = sum(cm.get((i, dk, c), 0) for i in ids for c in cc)
+    return t or None
+
 def build_rows(sub, dal, cm, dc, dlw, dly):
     rows = []
     for r in RESTAURANTS:
-        if r["dallas"]:
-            def gs(dk, dt=r["dType"]):
-                d = dal.get(dk, {}); return (d["v"] if dt == "vino" else d["c"]) if d.get("ok") else None
-            sc, sw, sy = gs(dc), gs(dlw), gs(dly)
-        else:
-            def ss(dk, ids=r["ids"]):
-                t = sum(sub.get(i, {}).get(dk, 0) for i in ids)
-                return t if any(sub.get(i, {}).get(dk) is not None for i in ids) else None
-            sc, sw, sy = ss(dc), ss(dlw), ss(dly)
-        def gc(dk, ids=r["ids"], cc=r["cc"]):
-            t = sum(cm.get((i, dk, c), 0) for i in ids for c in cc); return t or None
-        rows.append({"name": r["name"], "region": r["region"], "sCur": sc, "sLw": sw, "sLy": sy,
-                     "cCur": gc(dc), "cLw": gc(dlw), "cLy": gc(dly)})
+        rows.append({
+            "name":  r["name"],
+            "region": r["region"],
+            "sCur": get_sales(sub, dal, r, dc),
+            "sLw":  get_sales(sub, dal, r, dlw),
+            "sLy":  get_sales(sub, dal, r, dly),
+            "cCur": get_covers(cm, r, dc),
+            "cLw":  get_covers(cm, r, dlw),
+            "cLy":  get_covers(cm, r, dly),
+        })
     return rows
 
 
