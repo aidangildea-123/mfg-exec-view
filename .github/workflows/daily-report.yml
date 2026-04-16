@@ -44,7 +44,13 @@ jobs:
           NS_CONSUMER_KEY:    ${{ secrets.NS_CONSUMER_KEY }}
           NS_CERTIFICATE_ID:  ${{ secrets.NS_CERTIFICATE_ID }}
           NS_PRIVATE_KEY:     ${{ secrets.NS_PRIVATE_KEY }}
-        run: python generate_report.py ${{ inputs.backfill_dates }}
+        run: |
+          DATES="${{ inputs.backfill_dates }}"
+          if [ -z "$DATES" ]; then
+            python generate_report.py
+          else
+            python generate_report.py $DATES
+          fi
 
       - name: Commit and push report
         run: |
