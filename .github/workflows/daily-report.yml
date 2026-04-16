@@ -8,6 +8,8 @@ on:
     - cron: '0 20 * * *'
     # 8:00 PM ET (01:00 UTC next day) — evening refresh
     - cron: '0 1 * * *'
+  workflow_dispatch:
+    # Allows manual trigger from the Actions tab — runs same logic as scheduled
 
 permissions:
   contents: write
