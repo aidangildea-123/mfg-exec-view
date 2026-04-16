@@ -155,19 +155,23 @@ def fetch_all(dc, dlw, dly, token):
         dk  = norm(r.get("effectivedate", ""))
         cid = int(r.get("currency", 1))
         fx[f"{dk}|{cid}"] = float(r.get("exchangerate", 1))
+    print(f"  FX rows: {len(list(fx.keys()))} rates loaded, sample keys: {list(fx.keys())[:3]}")
     def gfx(dk, cid): return 1.0 if cid == 1 else fx.get(f"{dk}|{cid}", 1.0)
 
     print("  [2/4] Sales...")
     sub = {}
-    for r in run_sql(
+    sales_raw = run_sql(
         f"SELECT t.trandate, t.subsidiary, t.currency, SUM(tl.foreignamount)*-1 AS net_sales "
         f"FROM transactionline tl JOIN transaction t ON t.id=tl.transaction JOIN account a ON a.id=tl.account "
         f"WHERE t.subsidiary IN ({IN_NON_DAL}) AND t.trandate IN ({d_sql}) "
         f"AND t.type IN ('Journal','CustInvc') AND a.accttype='Income' "
         f"AND (t.approvalstatus=2 OR t.approvalstatus IS NULL) "
-        f"GROUP BY t.trandate, t.subsidiary, t.currency", token):
+        f"GROUP BY t.trandate, t.subsidiary, t.currency", token)
+    if sales_raw: print(f"  Sales sample row keys: {list(sales_raw[0].keys())} values: {sales_raw[0]}")
+    for r in sales_raw:
         sid = int(r["subsidiary"]); dk = norm(r["trandate"]); cid = int(r.get("currency", 1))
         sub.setdefault(sid, {})[dk] = round(float(r.get("net_sales") or 0) * gfx(dk, cid), 2)
+    print(f"  Sales loaded: {sum(len(v) for v in sub.values())} date-entries across {len(sub)} subsidiaries")
 
     print("  [3/4] Dallas class split...")
     dal = {}
