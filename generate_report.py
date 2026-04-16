@@ -96,7 +96,7 @@ def get_access_token() -> str:
     )
     sig = private_key.sign(
         signing_input,
-        padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH),
+        padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=32),  # saltLen = hLen per jsrsasign default
         hashes.SHA256(),
     )
     jwt = f"{h}.{p}.{b64url(sig)}"
@@ -111,7 +111,9 @@ def get_access_token() -> str:
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         timeout=30,
     )
-    resp.raise_for_status()
+    if not resp.ok:
+        print(f"  NetSuite auth error {resp.status_code}: {resp.text}")
+        resp.raise_for_status()
     print("  Access token obtained")
     return resp.json()["access_token"]
 
