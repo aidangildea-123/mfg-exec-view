@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MFG Daily Snapshot Report Generator
+MFG Daily Sales Report Generator
 Authenticates directly with NetSuite via OAuth 2.0 JWT (PS256),
 runs SuiteQL queries, and writes a static HTML report to docs/index.html.
 No Anthropic API required — completely free to run.
@@ -395,7 +395,7 @@ def build_index():
 
     total = sum(len(v) for v in months.values())
     index_html = (
-        f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'        f'<meta name="viewport" content="width=device-width,initial-scale=1.0">'        f'<title>MFG Daily Snapshot</title>'        f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">'        f'<style>'        f'*{{box-sizing:border-box;margin:0;padding:0}}'        f'body{{font-family:"DM Sans","Helvetica Neue",sans-serif;background:#f4f5f7;min-height:100vh;padding-bottom:48px;color:#111827}}'        f'details summary::-webkit-details-marker{{display:none}}'        f'details[open] summary{{border-radius:8px 8px 0 0}}'        f'details[open]>div{{background:#f9fafb;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;padding:10px 10px 6px}}'        f'a:hover{{opacity:0.85}}'        f'</style></head><body>'        f'<div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:20px 16px 16px">'        f'<div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px">Major Food Group</div>'        f'<div style="font-size:24px;font-weight:700;letter-spacing:-0.02em">Daily Snapshot</div>'        f'<div style="font-size:11px;color:#9ca3af;margin-top:3px">{total} report{"s" if total!=1 else ""} available</div>'        f'</div>'        f'<div style="padding:16px">{latest_card}{sections}</div>'        f'</body></html>'
+        f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'        f'<meta name="viewport" content="width=device-width,initial-scale=1.0">'        f'<title>MFG Daily Sales</title>'        f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">'        f'<style>'        f'*{{box-sizing:border-box;margin:0;padding:0}}'        f'body{{font-family:"DM Sans","Helvetica Neue",sans-serif;background:#f4f5f7;min-height:100vh;padding-bottom:48px;color:#111827}}'        f'details summary::-webkit-details-marker{{display:none}}'        f'details[open] summary{{border-radius:8px 8px 0 0}}'        f'details[open]>div{{background:#f9fafb;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;padding:10px 10px 6px}}'        f'a:hover{{opacity:0.85}}'        f'</style></head><body>'        f'<div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:20px 16px 16px">'        f'<div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px">Major Food Group</div>'        f'<div style="font-size:24px;font-weight:700;letter-spacing:-0.02em">Daily Sales</div>'        f'<div style="font-size:11px;color:#9ca3af;margin-top:3px">{total} report{"s" if total!=1 else ""} available</div>'        f'</div>'        f'<div style="padding:16px">{latest_card}{sections}</div>'        f'</body></html>'
     )
 
     with open(os.path.join(OUTPUT_DIR, "index.html"), "w") as f:
@@ -405,7 +405,16 @@ def build_index():
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    target = date.today() - timedelta(days=1)
+    import sys
+
+    # Optional single date arg: python generate_report.py 2026-04-10
+    # If no arg provided, defaults to yesterday
+    if len(sys.argv) > 1 and sys.argv[1].strip():
+        target = date.fromisoformat(sys.argv[1].strip())
+        print(f"Single date mode: {target}")
+    else:
+        target = date.today() - timedelta(days=1)
+
     dc  = target.isoformat()
     dlw = (target - timedelta(weeks=1)).isoformat()
     dly = (target - timedelta(weeks=52)).isoformat()
@@ -413,21 +422,17 @@ if __name__ == "__main__":
     print(f"Generating report for {dc} (WoW: {dlw}, YoY: {dly})")
     print("Authenticating with NetSuite...")
     token = get_access_token()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     sub, dal, cm = fetch_all(dc, dlw, dly, token)
     rows = build_rows(sub, dal, cm, dc, dlw, dly)
     html = make_html(dc, dlw, dly, rows)
 
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-    # Save dated report
     report_path = os.path.join(OUTPUT_DIR, f"{dc}.html")
     with open(report_path, "w") as f:
         f.write(html)
     print(f"Report written to {report_path}")
 
-    # Rebuild index.html listing all available dates
     build_index()
-
     print(f"Done. MFG Sales: {fmt(sum(r['sCur'] or 0 for r in rows))}")
     print(f"Restaurants with data: {sum(1 for r in rows if r['sCur'] is not None)}/25")
