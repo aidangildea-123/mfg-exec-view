@@ -1,4 +1,4 @@
-name: Daily MFG Sales Report
+name: Daily MFG Sales Report (Auto)
 
 on:
   schedule:
@@ -8,12 +8,6 @@ on:
     - cron: '0 20 * * *'
     # 8:00 PM ET (01:00 UTC next day) — evening refresh of yesterday
     - cron: '0 1 * * *'
-  workflow_dispatch:
-    inputs:
-      report_date:
-        description: 'Date to generate report for e.g. 2026-04-10 (leave blank for yesterday)'
-        required: false
-        default: ''
 
 permissions:
   contents: write
@@ -40,22 +34,16 @@ jobs:
 
       - name: Generate daily report
         env:
-          NS_ACCOUNT_ID:      ${{ secrets.NS_ACCOUNT_ID }}
-          NS_CONSUMER_KEY:    ${{ secrets.NS_CONSUMER_KEY }}
-          NS_CERTIFICATE_ID:  ${{ secrets.NS_CERTIFICATE_ID }}
-          NS_PRIVATE_KEY:     ${{ secrets.NS_PRIVATE_KEY }}
-        run: |
-          DATE="${{ inputs.report_date }}"
-          if [ -z "$DATE" ]; then
-            python generate_report.py
-          else
-            python generate_report.py $DATE
-          fi
+          NS_ACCOUNT_ID:     ${{ secrets.NS_ACCOUNT_ID }}
+          NS_CONSUMER_KEY:   ${{ secrets.NS_CONSUMER_KEY }}
+          NS_CERTIFICATE_ID: ${{ secrets.NS_CERTIFICATE_ID }}
+          NS_PRIVATE_KEY:    ${{ secrets.NS_PRIVATE_KEY }}
+        run: python generate_report.py
 
       - name: Commit and push report
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions"
           git add docs/
-          git diff --staged --quiet || git commit -m "Daily sales report $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Auto daily report $(date +'%Y-%m-%d')"
           git push
