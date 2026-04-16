@@ -334,6 +334,59 @@ def make_html(dc, dlw, dly, rows):
             f'</body></html>')
 
 
+# ── Index builder ─────────────────────────────────────────────────────────────
+def build_index():
+    """Scan docs/ for dated HTML files and build an index page listing them."""
+    files = sorted(
+        [f for f in os.listdir(OUTPUT_DIR) if f.endswith(".html") and f != "index.html"],
+        reverse=True  # most recent first
+    )
+    if not files:
+        return
+
+    rows_html = ""
+    for f in files:
+        d = f.replace(".html", "")
+        try:
+            parsed = date.fromisoformat(d)
+            label = parsed.strftime("%A, %B %-d, %Y")
+        except Exception:
+            label = d
+        rows_html += (
+            f'<a href="{f}" style="display:flex;align-items:center;justify-content:space-between;'
+            f'padding:14px 20px;background:#fff;border-radius:8px;margin-bottom:8px;'
+            f'box-shadow:0 1px 3px rgba(0,0,0,0.06);text-decoration:none;color:#111827;'
+            f'font-family:\'DM Sans\',\'Helvetica Neue\',sans-serif;">'
+            f'<span style="font-size:14px;font-weight:600">{label}</span>'
+            f'<span style="font-size:12px;color:#9ca3af">{d} &rsaquo;</span>'
+            f'</a>'
+        )
+
+    index_html = (
+        f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
+        f'<meta name="viewport" content="width=device-width,initial-scale=1.0">'
+        f'<title>MFG Daily Sales</title>'
+        f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap">'
+        f'<style>*{{box-sizing:border-box;margin:0;padding:0}}'
+        f'body{{font-family:"DM Sans","Helvetica Neue",sans-serif;background:#f4f5f7;min-height:100vh;padding-bottom:48px}}'
+        f'a:hover{{box-shadow:0 4px 12px rgba(0,0,0,0.1)!important;transform:translateY(-1px);transition:all .15s}}'
+        f'</style></head><body>'
+        f'<div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:20px 20px 16px">'
+        f'<div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Major Food Group</div>'
+        f'<div style="font-size:24px;font-weight:700;color:#111827;letter-spacing:-0.03em">Daily Sales</div>'
+        f'<div style="font-size:11px;color:#9ca3af;margin-top:3px">Select a date to view</div>'
+        f'</div>'
+        f'<div style="padding:16px 16px 0">{rows_html}</div>'
+        f'<div style="padding:20px;text-align:center;font-size:10px;color:#d1d5db">'
+        f'{len(files)} report{"s" if len(files) != 1 else ""} available'
+        f'</div></body></html>'
+    )
+
+    with open(os.path.join(OUTPUT_DIR, "index.html"), "w") as f:
+        f.write(index_html)
+    print(f"Index updated — {len(files)} reports listed")
+
+
 # ── Main ───────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     target = date.today() - timedelta(days=1)
@@ -352,8 +405,15 @@ if __name__ == "__main__":
     html = make_html(dc, dlw, dly, rows)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(os.path.join(OUTPUT_DIR, "index.html"), "w") as f:
+
+    # Save dated report
+    report_path = os.path.join(OUTPUT_DIR, f"{dc}.html")
+    with open(report_path, "w") as f:
         f.write(html)
+    print(f"Report written to {report_path}")
+
+    # Rebuild index.html listing all available dates
+    build_index()
 
     print(f"Done. MFG Sales: {fmt(sum(r['sCur'] or 0 for r in rows))}")
     print(f"Restaurants with data: {sum(1 for r in rows if r['sCur'] is not None)}/25")
