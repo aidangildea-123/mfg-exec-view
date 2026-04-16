@@ -336,55 +336,60 @@ def make_html(dc, dlw, dly, rows):
 
 # ── Index builder ─────────────────────────────────────────────────────────────
 def build_index():
-    """Scan docs/ for dated HTML files and build an index page listing them."""
+    """Scan docs/ for dated HTML files and build a grouped collapsible index page."""
+    from collections import defaultdict
     files = sorted(
         [f for f in os.listdir(OUTPUT_DIR) if f.endswith(".html") and f != "index.html"],
-        reverse=True  # most recent first
+        reverse=True
     )
     if not files:
         return
 
-    rows_html = ""
+    # Parse and group by month
+    months = defaultdict(list)
+    latest_date, latest_file = None, None
     for f in files:
         d = f.replace(".html", "")
         try:
             parsed = date.fromisoformat(d)
-            label = parsed.strftime("%A, %B %-d, %Y")
         except Exception:
-            label = d
-        rows_html += (
-            f'<a href="{f}" style="display:flex;align-items:center;justify-content:space-between;'
-            f'padding:14px 20px;background:#fff;border-radius:8px;margin-bottom:8px;'
-            f'box-shadow:0 1px 3px rgba(0,0,0,0.06);text-decoration:none;color:#111827;'
-            f'font-family:\'DM Sans\',\'Helvetica Neue\',sans-serif;">'
-            f'<span style="font-size:14px;font-weight:600">{label}</span>'
-            f'<span style="font-size:12px;color:#9ca3af">{d} &rsaquo;</span>'
-            f'</a>'
+            continue
+        months[parsed.strftime("%Y-%m")].append((parsed, f))
+        if latest_date is None or parsed > latest_date:
+            latest_date = parsed
+            latest_file = f
+
+    # Pinned latest card
+    latest_label = latest_date.strftime("%A, %B %-d, %Y") if latest_date else ""
+    latest_card = (
+        f'<a href="{latest_file}" style="display:flex;align-items:center;justify-content:space-between;'        f'padding:16px 20px;background:#111827;border-radius:10px;margin-bottom:20px;'        f'text-decoration:none;color:#fff;">'        f'<div>'        f'<div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px">Latest Report</div>'        f'<div style="font-size:16px;font-weight:700">{latest_label}</div>'        f'</div>'        f'<span style="font-size:20px;color:#9ca3af">&rsaquo;</span>'        f'</a>'
+    )
+
+    # Collapsible month sections — most recent month open by default
+    sorted_months = sorted(months.keys(), reverse=True)
+    sections = ""
+    for i, mk in enumerate(sorted_months):
+        month_label = date.fromisoformat(mk + "-01").strftime("%B %Y")
+        entries = sorted(months[mk], reverse=True)
+        open_attr = "open" if i == 0 else ""
+        rows = ""
+        for parsed, f in entries:
+            day_label = parsed.strftime("%A, %-d %B %Y")
+            rows += (
+                f'<a href="{f}" style="display:flex;align-items:center;justify-content:space-between;'                f'padding:12px 16px;background:#fff;border-radius:6px;margin-bottom:6px;'                f'text-decoration:none;color:#111827;box-shadow:0 1px 2px rgba(0,0,0,0.05);">'                f'<span style="font-size:13px;font-weight:500">{day_label}</span>'                f'<span style="font-size:12px;color:#9ca3af">&rsaquo;</span>'                f'</a>'
+            )
+        sections += (
+            f'<details {open_attr} style="margin-bottom:10px;">'            f'<summary style="cursor:pointer;list-style:none;padding:12px 16px;background:#fff;'            f'border-radius:8px;font-size:13px;font-weight:700;color:#374151;'            f'box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:space-between;">'            f'<span>{month_label}</span>'            f'<span style="font-size:11px;color:#9ca3af;font-weight:400">{len(entries)} report{"s" if len(entries)!=1 else ""}</span>'            f'</summary>'            f'<div style="padding:8px 0 4px">{rows}</div>'            f'</details>'
         )
 
+    total = sum(len(v) for v in months.values())
     index_html = (
-        f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
-        f'<meta name="viewport" content="width=device-width,initial-scale=1.0">'
-        f'<title>MFG Daily Sales</title>'
-        f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap">'
-        f'<style>*{{box-sizing:border-box;margin:0;padding:0}}'
-        f'body{{font-family:"DM Sans","Helvetica Neue",sans-serif;background:#f4f5f7;min-height:100vh;padding-bottom:48px}}'
-        f'a:hover{{box-shadow:0 4px 12px rgba(0,0,0,0.1)!important;transform:translateY(-1px);transition:all .15s}}'
-        f'</style></head><body>'
-        f'<div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:20px 20px 16px">'
-        f'<div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Major Food Group</div>'
-        f'<div style="font-size:24px;font-weight:700;color:#111827;letter-spacing:-0.03em">Daily Sales</div>'
-        f'<div style="font-size:11px;color:#9ca3af;margin-top:3px">Select a date to view</div>'
-        f'</div>'
-        f'<div style="padding:16px 16px 0">{rows_html}</div>'
-        f'<div style="padding:20px;text-align:center;font-size:10px;color:#d1d5db">'
-        f'{len(files)} report{"s" if len(files) != 1 else ""} available'
-        f'</div></body></html>'
+        f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'        f'<meta name="viewport" content="width=device-width,initial-scale=1.0">'        f'<title>MFG Daily Sales</title>'        f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">'        f'<style>'        f'*{{box-sizing:border-box;margin:0;padding:0}}'        f'body{{font-family:"DM Sans","Helvetica Neue",sans-serif;background:#f4f5f7;min-height:100vh;padding-bottom:48px;color:#111827}}'        f'details summary::-webkit-details-marker{{display:none}}'        f'details[open] summary{{border-radius:8px 8px 0 0}}'        f'details[open]>div{{background:#f9fafb;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;padding:10px 10px 6px}}'        f'a:hover{{opacity:0.85}}'        f'</style></head><body>'        f'<div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:20px 16px 16px">'        f'<div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px">Major Food Group</div>'        f'<div style="font-size:24px;font-weight:700;letter-spacing:-0.02em">Daily Sales</div>'        f'<div style="font-size:11px;color:#9ca3af;margin-top:3px">{total} report{"s" if total!=1 else ""} available</div>'        f'</div>'        f'<div style="padding:16px">{latest_card}{sections}</div>'        f'</body></html>'
     )
 
     with open(os.path.join(OUTPUT_DIR, "index.html"), "w") as f:
         f.write(index_html)
-    print(f"Index updated — {len(files)} reports listed")
+    print(f"Index updated — {total} reports across {len(sorted_months)} month(s)")
 
 
 # ── Main ───────────────────────────────────────────────────────────────────────
