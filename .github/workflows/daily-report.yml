@@ -4,9 +4,9 @@ on:
   schedule:
     # 11:00 AM ET (16:00 UTC) — morning run, yesterday's final data
     - cron: '0 16 * * *'
-    # 3:00 PM ET (20:00 UTC) — afternoon refresh of yesterday
+    # 3:00 PM ET (20:00 UTC) — afternoon refresh
     - cron: '0 20 * * *'
-    # 8:00 PM ET (01:00 UTC next day) — evening refresh of yesterday
+    # 8:00 PM ET (01:00 UTC next day) — evening refresh
     - cron: '0 1 * * *'
 
 permissions:
@@ -32,18 +32,23 @@ jobs:
       - name: Install dependencies
         run: pip install cryptography requests
 
-      - name: Generate daily report
+      - name: Generate reports (yesterday + day before)
         env:
           NS_ACCOUNT_ID:     ${{ secrets.NS_ACCOUNT_ID }}
           NS_CONSUMER_KEY:   ${{ secrets.NS_CONSUMER_KEY }}
           NS_CERTIFICATE_ID: ${{ secrets.NS_CERTIFICATE_ID }}
           NS_PRIVATE_KEY:    ${{ secrets.NS_PRIVATE_KEY }}
-        run: python generate_report.py
+        run: |
+          YESTERDAY=$(date -d "yesterday" '+%Y-%m-%d')
+          DAY_BEFORE=$(date -d "2 days ago" '+%Y-%m-%d')
+          echo "Refreshing $DAY_BEFORE and $YESTERDAY"
+          python generate_report.py $DAY_BEFORE
+          python generate_report.py $YESTERDAY
 
-      - name: Commit and push report
+      - name: Commit and push reports
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions"
           git add docs/
-          git diff --staged --quiet || git commit -m "Auto daily report $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Auto daily reports $(date +'%Y-%m-%d')"
           git push
