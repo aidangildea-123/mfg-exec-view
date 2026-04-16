@@ -10,8 +10,8 @@ on:
     - cron: '0 1 * * *'
   workflow_dispatch:
     inputs:
-      backfill_dates:
-        description: 'Space-separated dates to backfill e.g. 2026-04-10 2026-04-11 2026-04-12 (leave blank for yesterday)'
+      report_date:
+        description: 'Date to generate report for e.g. 2026-04-10 (leave blank for yesterday)'
         required: false
         default: ''
 
@@ -45,11 +45,11 @@ jobs:
           NS_CERTIFICATE_ID:  ${{ secrets.NS_CERTIFICATE_ID }}
           NS_PRIVATE_KEY:     ${{ secrets.NS_PRIVATE_KEY }}
         run: |
-          DATES="${{ inputs.backfill_dates }}"
-          if [ -z "$DATES" ]; then
+          DATE="${{ inputs.report_date }}"
+          if [ -z "$DATE" ]; then
             python generate_report.py
           else
-            python generate_report.py $DATES
+            python generate_report.py $DATE
           fi
 
       - name: Commit and push report
