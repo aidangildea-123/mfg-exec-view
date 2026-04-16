@@ -87,8 +87,12 @@ def get_access_token() -> str:
     p = b64url(json.dumps(payload, separators=(",", ":")).encode())
     signing_input = f"{h}.{p}".encode()
 
+    # GitHub Secrets sometimes stores newlines as literal \n — fix that here
+    pem = NS_PRIVATE_KEY_PEM.replace("\\n", "\n").strip()
+    if not pem.startswith("-----"):
+        raise ValueError("NS_PRIVATE_KEY does not look like a valid PEM key. Check the secret value.")
     private_key = serialization.load_pem_private_key(
-        NS_PRIVATE_KEY_PEM.encode(), password=None, backend=default_backend()
+        pem.encode(), password=None, backend=default_backend()
     )
     sig = private_key.sign(
         signing_input,
