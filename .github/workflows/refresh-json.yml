@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       days_back:
-        description: "How many trailing days to refresh"
+        description: "How many trailing days to refresh (manual only)"
         required: false
         default: "14"
   schedule:
@@ -69,29 +69,29 @@ jobs:
             python generate_report.py "$TARGET_DATE"
           done
 
-- name: Commit updated JSON
-  shell: bash
-  run: |
-    git config user.name "github-actions[bot]"
-    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Commit updated JSON
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    echo "--- docs/data contents ---"
-    ls -la docs/data || true
+          echo "--- docs/data contents ---"
+          ls -la docs/data || true
 
-    echo "--- git status before add ---"
-    git status --untracked-files=all
+          echo "--- git status before add ---"
+          git status --untracked-files=all
 
-    echo "--- ignored files in docs/data ---"
-    git status --ignored docs/data || true
+          echo "--- ignored files in docs/data ---"
+          git status --ignored docs/data || true
 
-    git add -A docs/data
+          git add -A docs/data
 
-    echo "--- git status after add ---"
-    git status --untracked-files=all
+          echo "--- git status after add ---"
+          git status --untracked-files=all
 
-    if git diff --cached --quiet; then
-      echo "No changes to commit"
-    else
-      git commit -m "Refresh dashboard JSON"
-      git push
-    fi
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Refresh dashboard JSON"
+            git push
+          fi
