@@ -184,7 +184,10 @@
         return `
           <details class="month-details">
             <summary class="month-summary">
-              <span>${formatMonthLabel(monthKey)}</span>
+              <span style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:12px;color:#9ca3af;display:inline-block;width:12px">▸</span>
+                <span>${formatMonthLabel(monthKey)}</span>
+              </span>
               <span style="font-size:11px;color:#9ca3af;font-weight:400">${dates.length} report${dates.length !== 1 ? "s" : ""}</span>
             </summary>
             <div class="month-body">
