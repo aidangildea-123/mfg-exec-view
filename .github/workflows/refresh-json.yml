@@ -15,6 +15,9 @@ on:
     - cron: "7 20 * * *"
       timezone: "America/New_York"
 
+permissions:
+  contents: write
+  
 concurrency:
   group: refresh-dashboard-json
   cancel-in-progress: false
