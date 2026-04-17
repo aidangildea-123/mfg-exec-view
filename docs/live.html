@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MFG Live Snapshot</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "DM Sans", "Helvetica Neue", sans-serif;
+      background: #f4f5f7;
+      color: #111827;
+      padding-bottom: 48px;
+    }
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 20px 16px 16px;
+    }
+    .subtle {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+    .controls {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    input, button {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    input {
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+    button {
+      border: none;
+      background: #111827;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .container {
+      padding: 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .totals {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .metric-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .status {
+      font-size: 14px;
+      color: #6b7280;
+      padding: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    thead th {
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+    tbody td {
+      padding: 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    tbody tr:hover {
+      background: #fafafa;
+    }
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .linkbar {
+      margin-top: 10px;
+    }
+    .linkbar a {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      text-decoration: none;
+      border: 1px solid #e5e7eb;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: #fff;
+      display: inline-block;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px;">Major Food Group</div>
+    <div style="font-size:28px;font-weight:700;letter-spacing:-0.02em;">Live Snapshot</div>
+    <div class="subtle">Load a report by date from static JSON files</div>
+    <div class="linkbar">
+      <a href="index.html">View HTML Archive</a>
+    </div>
+  </div>
+
+  <div class="controls">
+    <label for="reportDate" style="font-size:13px;font-weight:600;">Date</label>
+    <input type="date" id="reportDate" />
+    <button id="loadBtn">Load Report</button>
+  </div>
+
+  <div class="container">
+    <div id="status" class="status">Select a date and load a report.</div>
+    <div id="summary"></div>
+    <div id="tableWrap"></div>
+  </div>
+
+  <script>
+    function fmtMoney(n) {
+      if (n === null || n === undefined) return "—";
+      return "$" + Math.round(Math.abs(n)).toLocaleString();
+    }
+
+    function fmtCovers(n) {
+      if (n === null || n === undefined) return "—";
+      return Number(n).toLocaleString();
+    }
+
+    async function loadReport(dateStr) {
+      const status = document.getElementById("status");
+      const summary = document.getElementById("summary");
+      const tableWrap = document.getElementById("tableWrap");
+
+      summary.innerHTML = "";
+      tableWrap.innerHTML = "";
+      status.textContent = `Loading ${dateStr}...`;
+
+      try {
+        const res = await fetch(`data/${dateStr}.json`, { cache: "no-store" });
+
+        if (!res.ok) {
+          throw new Error(`No JSON found for ${dateStr}`);
+        }
+
+        const payload = await res.json();
+
+        status.textContent = `Loaded report for ${payload.report_date}`;
+
+        summary.innerHTML = `
+          <div class="card">
+            <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;">
+              MFG Total · ${payload.report_date}
+            </div>
+            <div class="totals">
+              <div>
+                <div class="metric-label">Sales</div>
+                <div class="metric-value">${fmtMoney(payload.summary.sales_current)}</div>
+              </div>
+              <div>
+                <div class="metric-label">Covers</div>
+                <div class="metric-value">${fmtCovers(payload.summary.covers_current)}</div>
+              </div>
+              <div>
+                <div class="metric-label">WoW Date</div>
+                <div style="font-size:18px;font-weight:700;">${payload.wow_date}</div>
+              </div>
+              <div>
+                <div class="metric-label">YoY Date</div>
+                <div style="font-size:18px;font-weight:700;">${payload.yoy_date}</div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const rows = payload.rows.map(r => `
+          <tr>
+            <td>${r.name}</td>
+            <td>${r.region}</td>
+            <td class="num">${fmtMoney(r.sCur)}</td>
+            <td class="num">${fmtMoney(r.sLw)}</td>
+            <td class="num">${fmtMoney(r.sLy)}</td>
+            <td class="num">${fmtCovers(r.cCur)}</td>
+            <td class="num">${fmtCovers(r.cLw)}</td>
+            <td class="num">${fmtCovers(r.cLy)}</td>
+          </tr>
+        `).join("");
+
+        tableWrap.innerHTML = `
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Restaurant</th>
+                  <th>Region</th>
+                  <th class="num">Sales Current</th>
+                  <th class="num">Sales WoW</th>
+                  <th class="num">Sales YoY</th>
+                  <th class="num">Covers Current</th>
+                  <th class="num">Covers WoW</th>
+                  <th class="num">Covers YoY</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      } catch (err) {
+        status.textContent = `Unable to load report: ${err.message}`;
+      }
+    }
+
+    document.getElementById("loadBtn").addEventListener("click", () => {
+      const dateStr = document.getElementById("reportDate").value;
+      if (!dateStr) {
+        document.getElementById("status").textContent = "Please choose a date first.";
+        return;
+      }
+      loadReport(dateStr);
+    });
+  </script>
+</body>
+</html>
