@@ -1,0 +1,73 @@
+name: Refresh dashboard JSON
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "7 11 * * *"
+      timezone: "America/New_York"
+    - cron: "7 15 * * *"
+      timezone: "America/New_York"
+    - cron: "7 20 * * *"
+      timezone: "America/New_York"
+
+concurrency:
+  group: refresh-dashboard-json
+  cancel-in-progress: false
+
+jobs:
+  refresh-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Decide refresh window
+        id: window
+        shell: bash
+        run: |
+          HOUR_NY=$(TZ=America/New_York date +%H)
+
+          if [ "$HOUR_NY" = "11" ]; then
+            echo "days_back=14" >> $GITHUB_OUTPUT
+          else
+            echo "days_back=2" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Refresh JSON files
+        shell: bash
+        env:
+          NS_ACCOUNT_ID: ${{ secrets.NS_ACCOUNT_ID }}
+          NS_CONSUMER_KEY: ${{ secrets.NS_CONSUMER_KEY }}
+          NS_CERTIFICATE_ID: ${{ secrets.NS_CERTIFICATE_ID }}
+          NS_PRIVATE_KEY: ${{ secrets.NS_PRIVATE_KEY }}
+        run: |
+          DAYS_BACK=${{ steps.window.outputs.days_back }}
+
+          for i in $(seq 1 $DAYS_BACK); do
+            TARGET_DATE=$(date -u -d "$i day ago" +%F)
+            echo "Refreshing $TARGET_DATE"
+            python generate_report.py "$TARGET_DATE"
+          done
+
+      - name: Commit updated JSON
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add docs/data
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Refresh dashboard JSON"
+            git push
+          fi
