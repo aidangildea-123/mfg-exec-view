@@ -402,6 +402,40 @@ def build_index():
         f.write(index_html)
     print(f"Index updated — {total} reports across {len(sorted_months)} month(s)")
 
+# ── Modular functionality───────────────────────────────────────────────────────────
+def build_report_payload(target: date, token: str) -> dict:
+    dc = target.isoformat()
+    dlw = (target - timedelta(weeks=1)).isoformat()
+    dly = (target - timedelta(weeks=52)).isoformat()
+
+    sub, dal, cm = fetch_all(dc, dlw, dly, token)
+    rows = build_rows(sub, dal, cm, dc, dlw, dly)
+
+    return {
+        "report_date": dc,
+        "wow_date": dlw,
+        "yoy_date": dly,
+        "rows": rows,
+        "summary": {
+            "sales_current": sum(r["sCur"] or 0 for r in rows),
+            "sales_last_week": sum(r["sLw"] or 0 for r in rows),
+            "sales_last_year": sum(r["sLy"] or 0 for r in rows),
+            "covers_current": sum(r["cCur"] or 0 for r in rows),
+            "covers_last_week": sum(r["cLw"] or 0 for r in rows),
+            "covers_last_year": sum(r["cLy"] or 0 for r in rows),
+            "restaurants_with_sales": sum(1 for r in rows if r["sCur"] is not None),
+            "restaurant_count": len(rows),
+        },
+    }
+
+
+def render_report_html(payload: dict) -> str:
+    return make_html(
+        payload["report_date"],
+        payload["wow_date"],
+        payload["yoy_date"],
+        payload["rows"],
+    )
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
@@ -415,24 +449,26 @@ if __name__ == "__main__":
     else:
         target = date.today() - timedelta(days=1)
 
-    dc  = target.isoformat()
-    dlw = (target - timedelta(weeks=1)).isoformat()
-    dly = (target - timedelta(weeks=52)).isoformat()
 
-    print(f"Generating report for {dc} (WoW: {dlw}, YoY: {dly})")
-    print("Authenticating with NetSuite...")
-    token = get_access_token()
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+print(f"Generating report for {target.isoformat()} "
+      f"(WoW: {(target - timedelta(weeks=1)).isoformat()}, "
+      f"YoY: {(target - timedelta(weeks=52)).isoformat()})")
+print("Authenticating with NetSuite...")
+token = get_access_token()
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    sub, dal, cm = fetch_all(dc, dlw, dly, token)
-    rows = build_rows(sub, dal, cm, dc, dlw, dly)
-    html = make_html(dc, dlw, dly, rows)
+payload = build_report_payload(target, token)
+html = render_report_html(payload)
 
-    report_path = os.path.join(OUTPUT_DIR, f"{dc}.html")
-    with open(report_path, "w") as f:
-        f.write(html)
-    print(f"Report written to {report_path}")
+report_path = os.path.join(OUTPUT_DIR, f"{payload['report_date']}.html")
+with open(report_path, "w") as f:
+    f.write(html)
+print(f"Report written to {report_path}")
 
-    build_index()
-    print(f"Done. MFG Sales: {fmt(sum(r['sCur'] or 0 for r in rows))}")
-    print(f"Restaurants with data: {sum(1 for r in rows if r['sCur'] is not None)}/25")
+build_index()
+print(f"Done. MFG Sales: {fmt(payload['summary']['sales_current'])}")
+print(
+    f"Restaurants with data: "
+    f"{payload['summary']['restaurants_with_sales']}/"
+    f"{payload['summary']['restaurant_count']}"
+)
