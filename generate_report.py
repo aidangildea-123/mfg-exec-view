@@ -296,21 +296,11 @@ def build_data_index():
 if __name__ == "__main__":
     args = [a.strip() for a in sys.argv[1:] if a.strip()]
 
-    target = date.today() - timedelta(days=1)
-    output_format = "html"
+    target = date.fromisoformat(args[0]) if args else date.today() - timedelta(days=1)
 
-    for arg in args:
-        if arg == "--json":
-            output_format = "json"
-        else:
-            target = date.fromisoformat(arg)
-
-    print(f"Mode: {output_format.upper()} | Date: {target}")
-    print(
-        f"Generating report for {target.isoformat()} "
-        f"(WoW: {(target - timedelta(weeks=1)).isoformat()}, "
-        f"YoY: {(target - timedelta(weeks=52)).isoformat()})"
-    )
+    print(f"Generating JSON for {target.isoformat()} "
+          f"(WoW: {(target - timedelta(weeks=1)).isoformat()}, "
+          f"YoY: {(target - timedelta(weeks=52)).isoformat()})")
 
     print("Authenticating with NetSuite...")
     token = get_access_token()
@@ -318,7 +308,6 @@ if __name__ == "__main__":
 
     payload = build_report_payload(target, token)
 
-if output_format == "json":
     data_dir = os.path.join(OUTPUT_DIR, "data")
     os.makedirs(data_dir, exist_ok=True)
 
@@ -328,19 +317,3 @@ if output_format == "json":
 
     print(f"JSON written to {json_path}")
     build_data_index()
-
-else:
-    html = render_report_html(payload)
-
-    report_path = os.path.join(OUTPUT_DIR, f"{payload['report_date']}.html")
-    with open(report_path, "w") as f:
-        f.write(html)
-    print(f"Report written to {report_path}")
-
-    build_index()
-    print(f"Done. MFG Sales: {fmt(payload['summary']['sales_current'])}")
-    print(
-        f"Restaurants with data: "
-        f"{payload['summary']['restaurants_with_sales']}/"
-        f"{payload['summary']['restaurant_count']}"
-    )
