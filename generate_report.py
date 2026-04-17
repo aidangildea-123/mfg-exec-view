@@ -262,6 +262,37 @@ def render_report_html(payload: dict) -> str:
 
 
 # ── Main ───────────────────────────────────────────────────────────────────────
+def build_data_index():
+    data_dir = os.path.join(OUTPUT_DIR, "data")
+    os.makedirs(data_dir, exist_ok=True)
+
+    dates = []
+    for f in os.listdir(data_dir):
+        if not f.endswith(".json") or f == "index.json":
+            continue
+
+        d = f[:-5]  # strip ".json"
+        try:
+            date.fromisoformat(d)
+            dates.append(d)
+        except ValueError:
+            continue
+
+    dates = sorted(dates, reverse=True)
+
+    manifest = {
+        "latest": dates[0] if dates else None,
+        "dates": dates,
+    }
+
+    index_path = os.path.join(data_dir, "index.json")
+    with open(index_path, "w") as f:
+        json.dump(manifest, f, indent=2)
+
+    print(f"Data index updated with {len(dates)} date(s)")
+
+
+
 if __name__ == "__main__":
     args = [a.strip() for a in sys.argv[1:] if a.strip()]
 
@@ -296,6 +327,8 @@ if output_format == "json":
         json.dump(payload, f, indent=2)
 
     print(f"JSON written to {json_path}")
+    build_data_index()
+
 else:
     html = render_report_html(payload)
 
