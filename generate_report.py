@@ -288,19 +288,26 @@ if __name__ == "__main__":
     payload = build_report_payload(target, token)
 
     if output_format == "json":
-        print(json.dumps(payload))
-    else:
-        html = render_report_html(payload)
+    data_dir = os.path.join(OUTPUT_DIR, "data")
+    os.makedirs(data_dir, exist_ok=True)
 
-        report_path = os.path.join(OUTPUT_DIR, f"{payload['report_date']}.html")
-        with open(report_path, "w") as f:
-            f.write(html)
-        print(f"Report written to {report_path}")
+    json_path = os.path.join(data_dir, f"{payload['report_date']}.json")
+    with open(json_path, "w") as f:
+        json.dump(payload, f, indent=2)
 
-        build_index()
-        print(f"Done. MFG Sales: {fmt(payload['summary']['sales_current'])}")
-        print(
-            f"Restaurants with data: "
-            f"{payload['summary']['restaurants_with_sales']}/"
-            f"{payload['summary']['restaurant_count']}"
-        )
+    print(f"JSON written to {json_path}")
+else:
+    html = render_report_html(payload)
+
+    report_path = os.path.join(OUTPUT_DIR, f"{payload['report_date']}.html")
+    with open(report_path, "w") as f:
+        f.write(html)
+    print(f"Report written to {report_path}")
+
+    build_index()
+    print(f"Done. MFG Sales: {fmt(payload['summary']['sales_current'])}")
+    print(
+        f"Restaurants with data: "
+        f"{payload['summary']['restaurants_with_sales']}/"
+        f"{payload['summary']['restaurant_count']}"
+    )
