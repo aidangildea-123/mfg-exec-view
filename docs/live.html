@@ -1,398 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MFG Live Snapshot</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "DM Sans", "Helvetica Neue", Helvetica, sans-serif;
-      background: #f4f5f7;
-      color: #111827;
-      padding-bottom: 48px;
-    }
-    .hidden { display: none; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MFG Live Snapshot</title>
 
-    .header {
-      background: #fff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 14px 16px 12px;
-    }
-    .controls {
-      background: #fff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 16px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .controls input, .controls button {
-      padding: 8px 10px;
-      font-size: 12px;
-      border-radius: 6px;
-      font-family: inherit;
-    }
-    .controls input {
-      border: 1px solid #d1d5db;
-      background: #fff;
-      color: #374151;
-    }
-    .controls button {
-      border: none;
-      background: #111827;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-    }
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap">
 
-    .jumpbar {
-      background: #fff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 10px 16px;
-    }
-    .jumpbar select {
-      width: 100%;
-      padding: 7px 10px;
-      font-size: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      background: #fff;
-      color: #374151;
-      font-family: inherit;
-    }
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .status {
-      padding: 16px;
-      font-size: 13px;
-      color: #6b7280;
-    }
+body {
+  font-family: "DM Sans", sans-serif;
+  background: #f4f5f7;
+  color: #111827;
+}
 
-    .badge {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-right: 4px;
-    }
+.header {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 16px;
+}
 
-    .link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #374151;
-      text-decoration: none;
-      padding: 5px 12px;
-      border: 1px solid #e5e7eb;
-      border-radius: 6px;
-      background: #fff;
-      margin-right: 8px;
-    }
+.status {
+  padding: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
 
-    .footer-note {
-      padding: 16px;
-      text-align: center;
-      font-size: 10px;
-      color: #d1d5db;
-    }
-  </style>
+.controls {
+  background: #fff;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* ---------- Date Picker ---------- */
+
+.date-panel-card {
+  background: #111827;
+  color: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.date-panel-card:hover { opacity: 0.95; }
+
+.month-details { margin-bottom: 10px; }
+
+.month-summary {
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.month-body {
+  padding: 10px;
+}
+
+.date-link {
+  padding: 10px 12px;
+  background: #fff;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.date-link.active {
+  border: 1px solid #111827;
+}
+
+/* ---------- Dashboard ---------- */
+
+.card {
+  background: #fff;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.metric {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.table {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+</style>
 </head>
+
 <body>
-  <div class="header">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
-      <div style="font-size:22px;font-weight:700;color:#111827;letter-spacing:-.03em">Live Snapshot</div>
-      <span id="header-date" style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;background:#f3f4f6;color:#374151;letter-spacing:.02em">No date loaded</span>
+
+<div class="header">
+  <h2>Live Snapshot</h2>
+  <div id="header-date"></div>
+</div>
+
+<div class="controls">
+  <div id="datePickerPanel"></div>
+</div>
+
+<div id="status" class="status">Loading…</div>
+
+<div id="app"></div>
+
+<script>
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function groupDates(dates) {
+  const groups = {};
+  dates.forEach(d => {
+    const key = d.slice(0,7);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(d);
+  });
+  return groups;
+}
+
+function renderDatePicker(manifest, active) {
+  const panel = document.getElementById("datePickerPanel");
+
+  let html = "";
+
+  // Latest badge
+  html += `
+    <div class="date-panel-card" onclick="loadReport('${manifest.latest}')">
+      <div>
+        <div style="font-size:10px;color:#9ca3af">Latest</div>
+        <div style="font-weight:700">${formatDate(manifest.latest)}</div>
+      </div>
+      <div>›</div>
     </div>
-    <div id="compare-line" style="font-size:11px;color:#9ca3af">Select a date to load a report</div>
-    <div style="margin-top:10px">
-      <a href="index.html" class="link-btn">&larr; HTML Archive</a>
-    </div>
-  </div>
+  `;
 
-  <div class="controls">
-    <label for="reportDate" style="font-size:12px;font-weight:600;color:#374151">Date</label>
-    <input type="date" id="reportDate" />
-    <button id="loadBtn">Load Report</button>
-  </div>
+  const groups = groupDates(manifest.dates);
 
-  <div id="jumpbar" class="jumpbar hidden">
-    <select id="locationJump">
-      <option value="">Jump to location…</option>
-    </select>
-  </div>
+  Object.keys(groups).sort().reverse().forEach(month => {
 
-  <div id="status" class="status">Select a date and load a report.</div>
-  <div id="app"></div>
-  <div id="footer" class="footer-note hidden">
-    London at spot GBP rate &nbsp;&middot;&nbsp; YoY = same weekday prior year (52 wks)
-  </div>
+    const dates = groups[month].sort().reverse();
 
-  <script>
-    const REGION_ORDER = ["Northeast", "Southeast", "Southwest", "International", "Parm"];
-    const REGION_ACCENT = {
-      "Northeast": "#1d4ed8",
-      "Southeast": "#059669",
-      "Southwest": "#d97706",
-      "International": "#7c3aed",
-      "Parm": "#dc2626"
-    };
-    const REGION_BG = {
-      "Northeast": "#eff6ff",
-      "Southeast": "#f0fdf4",
-      "Southwest": "#fffbeb",
-      "International": "#f5f3ff",
-      "Parm": "#fef2f2"
-    };
-    const REGION_BORDER = {
-      "Northeast": "#bfdbfe",
-      "Southeast": "#a7f3d0",
-      "Southwest": "#fde68a",
-      "International": "#ddd6fe",
-      "Parm": "#fecaca"
-    };
+    html += `
+      <details class="month-details">
+        <summary class="month-summary">${month}</summary>
+        <div class="month-body">
+    `;
 
-    function fmt(n) {
-      if (n === null || n === undefined) return "—";
-      return "$" + Math.round(Math.abs(n)).toLocaleString();
-    }
-
-    function fmtC(n) {
-      if (n === null || n === undefined) return "—";
-      return Math.trunc(n).toLocaleString();
-    }
-
-    function pct(c, p) {
-      if (c === null || c === undefined || p === null || p === undefined) return null;
-      if (p === 0 && c === 0) return 0;
-      if (p === 0) return null;
-      return (c - p) / p;
-    }
-
-    function fmtP(p) {
-      if (p === null || p === undefined) return "—";
-      if (p === 0) return "0%";
-      return p > 0 ? `+${Math.round(p * 100)}%` : `(${Math.abs(Math.round(p * 100))}%)`;
-    }
-
-    function pc(p) {
-      if (p === null || p === undefined) return "#9ca3af";
-      return p >= 0 ? "#15803d" : "#b91c1c";
-    }
-
-    function badge(p, label) {
-      if (p === null || p === undefined) return "";
-      const pos = p >= 0;
-      const bg = pos ? "#dcfce7" : "#fee2e2";
-      const col = pos ? "#15803d" : "#b91c1c";
-      const bdr = pos ? "#bbf7d0" : "#fecaca";
-      return `<span class="badge" style="background:${bg};color:${col};border:1px solid ${bdr}">${fmtP(p)} ${label}</span>`;
-    }
-
-    function safeId(name) {
-      return name.replaceAll(" ", "-").replaceAll("/", "-").replaceAll("'", "");
-    }
-
-    function dataRow(label, cur, lw, ly, name, accent, isFirst) {
-      const p1 = pct(cur, lw);
-      const p2 = pct(cur, ly);
-      const fv = isFirst ? fmt : fmtC;
-      const nm = (isFirst && name)
-        ? `<div style="font-size:13px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:2px">${name}</div>`
-        : "";
-      const lc = isFirst ? accent : "#9ca3af";
-      const cs = isFirst
-        ? "font-size:13px;font-weight:700;color:#111827"
-        : "font-size:12px;font-weight:600;color:#374151";
-      const bt = isFirst ? "border-top:1px solid #f3f4f6;" : "";
-      const pad = isFirst ? "padding:8px 16px 3px" : "padding:3px 16px 8px";
-
-      return `
-        <div style="display:flex;align-items:center;${pad};${bt}background:#fff">
-          <div style="width:40%;padding-right:8px">
-            ${nm}
-            <div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:${lc}">${label}</div>
-          </div>
-          <div style="flex:2;text-align:right;font-variant-numeric:tabular-nums;${cs}">${fv(cur)}</div>
-          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p1)}">${fmtP(p1)}</div>
-          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p2)}">${fmtP(p2)}</div>
+    dates.forEach(d => {
+      html += `
+        <div class="date-link ${d===active?"active":""}" onclick="loadReport('${d}')">
+          ${formatDate(d)}
         </div>
       `;
-    }
-
-    function regionBlock(region, rrows) {
-      const ac = REGION_ACCENT[region];
-      const bg = REGION_BG[region];
-      const bd = REGION_BORDER[region];
-      const isParm = region === "Parm";
-
-      const tSC = rrows.reduce((a, r) => a + (r.sCur || 0), 0);
-      const tSW = rrows.reduce((a, r) => a + (r.sLw || 0), 0);
-      const tSY = rrows.reduce((a, r) => a + (r.sLy || 0), 0);
-      const tCC = rrows.reduce((a, r) => a + (r.cCur || 0), 0);
-      const tCW = rrows.reduce((a, r) => a + (r.cLw || 0), 0);
-      const tCY = rrows.reduce((a, r) => a + (r.cLy || 0), 0);
-
-      const p1 = pct(tSC, tSW);
-      const p2 = pct(tSC, tSY);
-      const p3 = pct(tCC, tCW);
-      const p4 = pct(tCC, tCY);
-
-      let locs = "";
-      rrows.forEach((r, i) => {
-        const sep = i > 0 ? ' style="border-top:1px solid #f3f4f6"' : "";
-        const coversRow = isParm ? "" : dataRow("Covers", r.cCur, r.cLw, r.cLy, r.name, ac, false);
-        locs += `<div id="loc-${safeId(r.name)}"${sep}>${dataRow("Sales", r.sCur, r.sLw, r.sLy, r.name, ac, true)}${coversRow}</div>`;
-      });
-
-      const coversHeader = isParm ? "" : `
-        <div style="display:flex;align-items:center;padding:3px 16px 8px 0">
-          <div style="width:40%">
-            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af">Covers</div>
-          </div>
-          <div style="flex:2;text-align:right;font-size:12px;font-weight:600;color:#374151;font-variant-numeric:tabular-nums">${fmtC(tCC)}</div>
-          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p3)}">${fmtP(p3)}</div>
-          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p4)}">${fmtP(p4)}</div>
-        </div>
-      `;
-
-      return `
-        <div style="margin:16px 12px 0;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)">
-          <div style="background:${bg};border-bottom:1px solid ${bd};padding:10px 0 10px 16px">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-              <div style="width:3px;height:14px;border-radius:2px;background:${ac}"></div>
-              <span style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:${ac}">${region}</span>
-            </div>
-            <div style="display:flex;align-items:center;padding:8px 16px 3px 0">
-              <div style="width:40%">
-                <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${ac}">Sales</div>
-              </div>
-              <div style="flex:2;text-align:right;font-size:13px;font-weight:700;color:#111827;font-variant-numeric:tabular-nums">${fmt(tSC)}</div>
-              <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p1)}">${fmtP(p1)}</div>
-              <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p2)}">${fmtP(p2)}</div>
-            </div>
-            ${coversHeader}
-          </div>
-
-          <div style="display:flex;padding:5px 16px;background:#f9fafb;border-bottom:1px solid #e5e7eb;border-top:1px solid #e5e7eb">
-            <div style="width:40%;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">Location</div>
-            <div style="flex:2;text-align:right;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">Current</div>
-            <div style="flex:1;text-align:right;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">WoW</div>
-            <div style="flex:1;text-align:right;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">YoY</div>
-          </div>
-
-          <div style="background:#fff">${locs}</div>
-        </div>
-      `;
-    }
-
-    function renderJump(payload) {
-      const jumpbar = document.getElementById("jumpbar");
-      const select = document.getElementById("locationJump");
-
-      let options = `<option value="">Jump to location…</option>`;
-
-      REGION_ORDER.forEach(region => {
-        const rows = payload.rows.filter(r => r.region === region);
-        if (!rows.length) return;
-
-        options += `<optgroup label="${region}">`;
-        rows.forEach(r => {
-          options += `<option value="loc-${safeId(r.name)}">${r.name}</option>`;
-        });
-        options += `</optgroup>`;
-      });
-
-      select.innerHTML = options;
-      jumpbar.classList.remove("hidden");
-
-      select.onchange = function () {
-        if (!this.value) return;
-        document.getElementById(this.value)?.scrollIntoView({ behavior: "smooth", block: "center" });
-      };
-    }
-
-    function renderPayload(payload) {
-      document.getElementById("header-date").textContent = payload.report_date;
-      document.getElementById("compare-line").innerHTML = `WoW vs ${payload.wow_date} &nbsp;&middot;&nbsp; YoY vs ${payload.yoy_date}`;
-
-      const rows = payload.rows;
-      const mSC = rows.reduce((a, r) => a + (r.sCur || 0), 0);
-      const mSW = rows.reduce((a, r) => a + (r.sLw || 0), 0);
-      const mSY = rows.reduce((a, r) => a + (r.sLy || 0), 0);
-      const mCC = rows.reduce((a, r) => a + (r.cCur || 0), 0);
-      const mCW = rows.reduce((a, r) => a + (r.cLw || 0), 0);
-      const mCY = rows.reduce((a, r) => a + (r.cLy || 0), 0);
-
-      const regionsHtml = REGION_ORDER
-        .filter(reg => rows.some(r => r.region === reg))
-        .map(reg => regionBlock(reg, rows.filter(r => r.region === reg)))
-        .join("");
-
-      document.getElementById("app").innerHTML = `
-        <div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:16px">
-          <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">
-            MFG Total &nbsp;&middot;&nbsp; ${payload.report_date}
-          </div>
-          <div style="display:flex;gap:32px;flex-wrap:wrap">
-            <div>
-              <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Sales</div>
-              <div style="font-size:26px;font-weight:700;color:#111827;letter-spacing:-.03em;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums">${fmt(mSC)}</div>
-              ${badge(pct(mSC, mSW), "WoW")}
-              ${badge(pct(mSC, mSY), "YoY")}
-            </div>
-            <div style="width:1px;background:#e5e7eb;align-self:stretch"></div>
-            <div>
-              <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Covers</div>
-              <div style="font-size:26px;font-weight:700;color:#111827;letter-spacing:-.03em;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums">${fmtC(mCC)}</div>
-              ${badge(pct(mCC, mCW), "WoW")}
-              ${badge(pct(mCC, mCY), "YoY")}
-            </div>
-          </div>
-        </div>
-
-        ${regionsHtml}
-      `;
-
-      renderJump(payload);
-      document.getElementById("footer").classList.remove("hidden");
-    }
-
-    async function loadReport(dateStr) {
-      const status = document.getElementById("status");
-      const app = document.getElementById("app");
-      const footer = document.getElementById("footer");
-      const jumpbar = document.getElementById("jumpbar");
-
-      status.textContent = `Loading ${dateStr}...`;
-      app.innerHTML = "";
-      footer.classList.add("hidden");
-      jumpbar.classList.add("hidden");
-
-      try {
-        const res = await fetch(`data/${dateStr}.json`, { cache: "no-store" });
-        if (!res.ok) throw new Error(`No report found for ${dateStr}`);
-
-        const payload = await res.json();
-        renderPayload(payload);
-        status.textContent = "";
-      } catch (err) {
-        status.textContent = `Unable to load report: ${err.message}`;
-      }
-    }
-
-    document.getElementById("loadBtn").addEventListener("click", () => {
-      const dateStr = document.getElementById("reportDate").value;
-      if (!dateStr) {
-        document.getElementById("status").textContent = "Please choose a date first.";
-        return;
-      }
-      loadReport(dateStr);
     });
-  </script>
+
+    html += `</div></details>`;
+  });
+
+  panel.innerHTML = html;
+}
+
+function renderDashboard(p) {
+  document.getElementById("header-date").innerText = p.report_date;
+
+  const rows = p.rows.map(r => `
+    <div class="row">
+      <span>${r.name}</span>
+      <span>$${Math.round(r.sCur).toLocaleString()}</span>
+    </div>
+  `).join("");
+
+  document.getElementById("app").innerHTML = `
+    <div class="card">
+      <div>Sales</div>
+      <div class="metric">$${Math.round(p.summary.sales_current).toLocaleString()}</div>
+    </div>
+
+    <div class="card">
+      ${rows}
+    </div>
+  `;
+}
+
+async function loadReport(dateStr) {
+  document.getElementById("status").innerText = "Loading " + dateStr;
+
+  try {
+    const res = await fetch(`data/${dateStr}.json`);
+    if (!res.ok) throw new Error("Missing data");
+
+    const data = await res.json();
+
+    renderDashboard(data);
+
+    const manifest = await (await fetch("data/index.json")).json();
+    renderDatePicker(manifest, dateStr);
+
+    document.getElementById("status").innerText = "";
+
+  } catch(e) {
+    document.getElementById("status").innerText = "Error loading data";
+  }
+}
+
+async function init() {
+  const manifest = await (await fetch("data/index.json")).json();
+  renderDatePicker(manifest, manifest.latest);
+  loadReport(manifest.latest);
+}
+
+init();
+
+</script>
+
 </body>
 </html>
