@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>MFG Daily Snapshot</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"DM Sans","Helvetica Neue",Helvetica,sans-serif;background:#f4f5f7;padding-bottom:48px;color:#111827}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div style="padding:16px;font-size:13px;color:#6b7280">Loading report…</div>
+  </div>
+
+  <script>
+    const REGION_ORDER = ["Northeast", "Southeast", "Southwest", "International", "Parm"];
+    const REGION_ACCENT = {"Northeast": "#1d4ed8", "Southeast": "#059669", "Southwest": "#d97706", "International": "#7c3aed", "Parm": "#dc2626"};
+    const REGION_BG = {"Northeast": "#eff6ff", "Southeast": "#f0fdf4", "Southwest": "#fffbeb", "International": "#f5f3ff", "Parm": "#fef2f2"};
+    const REGION_BORDER = {"Northeast": "#bfdbfe", "Southeast": "#a7f3d0", "Southwest": "#fde68a", "International": "#ddd6fe", "Parm": "#fecaca"};
+
+    function fmt(n) {
+      if (n === null || n === undefined) return "—";
+      return "$" + Math.round(Math.abs(n)).toLocaleString();
+    }
+
+    function fmtC(n) {
+      if (n === null || n === undefined) return "—";
+      return Math.trunc(n).toLocaleString();
+    }
+
+    function pct(c, p) {
+      if (c === null || c === undefined || p === null || p === undefined) return null;
+      if (p === 0 && c === 0) return 0;
+      if (p === 0) return null;
+      return (c - p) / p;
+    }
+
+    function fmtP(p) {
+      if (p === null || p === undefined) return "—";
+      if (p === 0) return "0%";
+      return p > 0 ? `+${Math.round(p * 100)}%` : `(${Math.abs(Math.round(p * 100))}%)`;
+    }
+
+    function pc(p) {
+      if (p === null || p === undefined) return "#9ca3af";
+      return p >= 0 ? "#15803d" : "#b91c1c";
+    }
+
+    function badge(p, label) {
+      if (p === null || p === undefined) return "";
+      const pos = p >= 0;
+      const bg = pos ? "#dcfce7" : "#fee2e2";
+      const col = pos ? "#15803d" : "#b91c1c";
+      const bdr = pos ? "#bbf7d0" : "#fecaca";
+      return `<span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:${bg};color:${col};border:1px solid ${bdr};display:inline-block;margin-right:4px">${fmtP(p)} ${label}</span>`;
+    }
+
+    function safeId(name) {
+      return name.replaceAll(" ", "-").replaceAll("/", "-").replaceAll("'", "");
+    }
+
+    function dataRow(label, cur, lw, ly, name, accent, isFirst) {
+      const p1 = pct(cur, lw);
+      const p2 = pct(cur, ly);
+      const fv = isFirst ? fmt : fmtC;
+      const nm = (isFirst && name)
+        ? `<div style="font-size:13px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:2px">${name}</div>`
+        : "";
+      const lc = isFirst ? accent : "#9ca3af";
+      const cs = isFirst ? "font-size:13px;font-weight:700;color:#111827" : "font-size:12px;font-weight:600;color:#374151";
+      const bt = isFirst ? "border-top:1px solid #f3f4f6;" : "";
+      const pad = isFirst ? "padding:8px 16px 3px" : "padding:3px 16px 8px";
+
+      return `
+        <div style="display:flex;align-items:center;${pad};${bt}background:#fff">
+          <div style="width:40%;padding-right:8px">${nm}<div style="font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:${lc}">${label}</div></div>
+          <div style="flex:2;text-align:right;font-variant-numeric:tabular-nums;${cs}">${fv(cur)}</div>
+          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p1)}">${fmtP(p1)}</div>
+          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p2)}">${fmtP(p2)}</div>
+        </div>
+      `;
+    }
+
+    function regionBlock(region, rrows) {
+      const ac = REGION_ACCENT[region];
+      const bg = REGION_BG[region];
+      const bd = REGION_BORDER[region];
+      const isParm = region === "Parm";
+
+      const tSC = rrows.reduce((a, r) => a + (r.sCur || 0), 0);
+      const tSW = rrows.reduce((a, r) => a + (r.sLw || 0), 0);
+      const tSY = rrows.reduce((a, r) => a + (r.sLy || 0), 0);
+      const tCC = rrows.reduce((a, r) => a + (r.cCur || 0), 0);
+      const tCW = rrows.reduce((a, r) => a + (r.cLw || 0), 0);
+      const tCY = rrows.reduce((a, r) => a + (r.cLy || 0), 0);
+
+      const p1 = pct(tSC, tSW);
+      const p2 = pct(tSC, tSY);
+      const p3 = pct(tCC, tCW);
+      const p4 = pct(tCC, tCY);
+
+      let locs = "";
+      rrows.forEach((r, i) => {
+        const sep = i > 0 ? ' style="border-top:1px solid #f3f4f6"' : "";
+        const coversRow = isParm ? "" : dataRow("Covers", r.cCur, r.cLw, r.cLy, r.name, ac, false);
+        locs += `<div id="loc-${safeId(r.name)}"${sep}>${dataRow("Sales", r.sCur, r.sLw, r.sLy, r.name, ac, true)}${coversRow}</div>`;
+      });
+
+      const coversHeader = isParm ? "" : `
+        <div style="display:flex;align-items:center;padding:3px 16px 8px 0">
+          <div style="width:40%"><div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af">Covers</div></div>
+          <div style="flex:2;text-align:right;font-size:12px;font-weight:600;color:#374151;font-variant-numeric:tabular-nums">${fmtC(tCC)}</div>
+          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p3)}">${fmtP(p3)}</div>
+          <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p4)}">${fmtP(p4)}</div>
+        </div>
+      `;
+
+      return `
+        <div style="margin:16px 12px 0;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+          <div style="background:${bg};border-bottom:1px solid ${bd};padding:10px 0 10px 16px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:3px;height:14px;border-radius:2px;background:${ac}"></div>
+              <span style="font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:${ac}">${region}</span>
+            </div>
+            <div style="display:flex;align-items:center;padding:8px 16px 3px 0">
+              <div style="width:40%"><div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${ac}">Sales</div></div>
+              <div style="flex:2;text-align:right;font-size:13px;font-weight:700;color:#111827;font-variant-numeric:tabular-nums">${fmt(tSC)}</div>
+              <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p1)}">${fmtP(p1)}</div>
+              <div style="flex:1;text-align:right;font-size:11px;font-weight:600;color:${pc(p2)}">${fmtP(p2)}</div>
+            </div>
+            ${coversHeader}
+          </div>
+          <div style="display:flex;padding:5px 16px;background:#f9fafb;border-bottom:1px solid #e5e7eb;border-top:1px solid #e5e7eb">
+            <div style="width:40%;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">Location</div>
+            <div style="flex:2;text-align:right;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">Current</div>
+            <div style="flex:1;text-align:right;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">WoW</div>
+            <div style="flex:1;text-align:right;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af">YoY</div>
+          </div>
+          <div style="background:#fff">${locs}</div>
+        </div>
+      `;
+    }
+
+    function renderJump(payload) {
+      let options = `<option value="">Jump to location…</option>`;
+
+      REGION_ORDER.forEach(region => {
+        const rows = payload.rows.filter(r => r.region === region);
+        if (!rows.length) return;
+        options += `<optgroup label="${region}">`;
+        rows.forEach(r => {
+          options += `<option value="loc-${safeId(r.name)}">${r.name}</option>`;
+        });
+        options += `</optgroup>`;
+      });
+
+      return `
+        <div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 16px">
+          <select onchange="document.getElementById(this.value)?.scrollIntoView({behavior:'smooth',block:'center'})"
+            style="padding:7px 10px;font-size:12px;border:1px solid #d1d5db;border-radius:6px;background:#fff;color:#374151;font-family:inherit;width:100%">
+            ${options}
+          </select>
+        </div>
+      `;
+    }
+
+    function renderPayload(payload) {
+      const rows = payload.rows;
+      const mSC = rows.reduce((a, r) => a + (r.sCur || 0), 0);
+      const mSW = rows.reduce((a, r) => a + (r.sLw || 0), 0);
+      const mSY = rows.reduce((a, r) => a + (r.sLy || 0), 0);
+      const mCC = rows.reduce((a, r) => a + (r.cCur || 0), 0);
+      const mCW = rows.reduce((a, r) => a + (r.cLw || 0), 0);
+      const mCY = rows.reduce((a, r) => a + (r.cLy || 0), 0);
+
+      const regionsHtml = REGION_ORDER
+        .filter(reg => rows.some(r => r.region === reg))
+        .map(reg => regionBlock(reg, rows.filter(r => r.region === reg)))
+        .join("");
+
+      return `
+        <div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:14px 16px 12px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+            <div style="font-size:22px;font-weight:700;color:#111827;letter-spacing:-.03em">Daily Snapshot</div>
+            <span style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;background:#f3f4f6;color:#374151;letter-spacing:.02em">${payload.report_date}</span>
+          </div>
+          <div style="font-size:11px;color:#9ca3af">WoW vs ${payload.wow_date} &nbsp;&middot;&nbsp; YoY vs ${payload.yoy_date}</div>
+          <div style="margin-top:10px">
+            <a href="live.html" style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#374151;text-decoration:none;padding:5px 12px;border:1px solid #e5e7eb;border-radius:6px;background:#fff">
+              &larr; Choose Another Date
+            </a>
+          </div>
+        </div>
+
+        ${renderJump(payload)}
+
+        <div style="background:#fff;border-bottom:1px solid #e5e7eb;padding:16px">
+          <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">MFG Total &nbsp;&middot;&nbsp; ${payload.report_date}</div>
+          <div style="display:flex;gap:32px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Sales</div>
+              <div style="font-size:26px;font-weight:700;color:#111827;letter-spacing:-.03em;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums">${fmt(mSC)}</div>
+              ${badge(pct(mSC, mSW), "WoW")}${badge(pct(mSC, mSY), "YoY")}
+            </div>
+            <div style="width:1px;background:#e5e7eb;align-self:stretch"></div>
+            <div>
+              <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Covers</div>
+              <div style="font-size:26px;font-weight:700;color:#111827;letter-spacing:-.03em;line-height:1;margin-bottom:8px;font-variant-numeric:tabular-nums">${fmtC(mCC)}</div>
+              ${badge(pct(mCC, mCW), "WoW")}${badge(pct(mCC, mCY), "YoY")}
+            </div>
+          </div>
+        </div>
+
+        ${regionsHtml}
+
+        <div style="padding:16px;text-align:center;font-size:10px;color:#d1d5db">London at spot GBP rate &nbsp;&middot;&nbsp; YoY = same weekday prior year (52 wks) &nbsp;&middot;&nbsp; ${payload.report_date}</div>
+      `;
+    }
+
+    async function initPage() {
+      const app = document.getElementById("app");
+      const params = new URLSearchParams(window.location.search);
+      const dateStr = params.get("date");
+
+      if (!dateStr) {
+        app.innerHTML = `<div style="padding:16px;font-size:13px;color:#6b7280">No date selected. <a href="live.html">Go choose a date.</a></div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`data/${dateStr}.json`, { cache: "no-store" });
+        if (!res.ok) throw new Error(`No report found for ${dateStr}`);
+
+        const payload = await res.json();
+        app.innerHTML = renderPayload(payload);
+      } catch (err) {
+        app.innerHTML = `<div style="padding:16px;font-size:13px;color:#6b7280">Unable to load report: ${err.message}. <a href="live.html">Go back.</a></div>`;
+      }
+    }
+
+    initPage();
+  </script>
+</body>
+</html>

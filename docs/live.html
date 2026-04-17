@@ -1,246 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MFG Live Snapshot</title>
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap">
-
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: "DM Sans", sans-serif;
-  background: #f4f5f7;
-  color: #111827;
-}
-
-.header {
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 14px 16px;
-}
-
-.status {
-  padding: 16px;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.controls {
-  background: #fff;
-  padding: 16px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-/* ---------- Date Picker ---------- */
-
-.date-panel-card {
-  background: #111827;
-  color: #fff;
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 14px;
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.date-panel-card:hover { opacity: 0.95; }
-
-.month-details { margin-bottom: 10px; }
-
-.month-summary {
-  padding: 12px 16px;
-  background: #fff;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.month-body {
-  padding: 10px;
-}
-
-.date-link {
-  padding: 10px 12px;
-  background: #fff;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  cursor: pointer;
-}
-
-.date-link.active {
-  border: 1px solid #111827;
-}
-
-/* ---------- Dashboard ---------- */
-
-.card {
-  background: #fff;
-  margin: 16px;
-  padding: 16px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-}
-
-.metric {
-  font-size: 26px;
-  font-weight: 700;
-}
-
-.badge {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
-.table {
-  width: 100%;
-  margin-top: 12px;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MFG Snapshot Dates</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "DM Sans", "Helvetica Neue", sans-serif;
+      background: #f4f5f7;
+      min-height: 100vh;
+      padding-bottom: 48px;
+      color: #111827;
+    }
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 20px 16px 16px;
+    }
+    .status {
+      padding: 16px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .container {
+      padding: 16px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .date-panel-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: #111827;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #fff;
+      cursor: pointer;
+    }
+    .date-panel-card:hover { opacity: 0.96; }
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 3px;
+    }
+    .latest-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .month-details {
+      margin-bottom: 10px;
+    }
+    .month-summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 12px 16px;
+      background: #fff;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .month-summary::-webkit-details-marker { display: none; }
+    .month-details[open] .month-summary {
+      border-radius: 8px 8px 0 0;
+    }
+    .month-details[open] .month-body {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 10px 10px 6px;
+    }
+    .date-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #fff;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      text-decoration: none;
+      color: #111827;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      cursor: pointer;
+    }
+    .date-link:hover { opacity: 0.9; }
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      text-decoration: none;
+      padding: 5px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #fff;
+      margin-right: 8px;
+    }
+  </style>
 </head>
-
 <body>
-
-<div class="header">
-  <h2>Live Snapshot</h2>
-  <div id="header-date"></div>
-</div>
-
-<div class="controls">
-  <div id="datePickerPanel"></div>
-</div>
-
-<div id="status" class="status">Loading…</div>
-
-<div id="app"></div>
-
-<script>
-
-function formatDate(d) {
-  return new Date(d).toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  });
-}
-
-function groupDates(dates) {
-  const groups = {};
-  dates.forEach(d => {
-    const key = d.slice(0,7);
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(d);
-  });
-  return groups;
-}
-
-function renderDatePicker(manifest, active) {
-  const panel = document.getElementById("datePickerPanel");
-
-  let html = "";
-
-  // Latest badge
-  html += `
-    <div class="date-panel-card" onclick="loadReport('${manifest.latest}')">
-      <div>
-        <div style="font-size:10px;color:#9ca3af">Latest</div>
-        <div style="font-weight:700">${formatDate(manifest.latest)}</div>
-      </div>
-      <div>›</div>
+  <div class="header">
+    <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px">Major Food Group</div>
+    <div style="font-size:24px;font-weight:700;letter-spacing:-0.02em">Daily Snapshot</div>
+    <div style="font-size:11px;color:#9ca3af;margin-top:3px">Choose an available report date</div>
+    <div style="margin-top:10px">
+      <a href="index.html" class="link-btn">Original Index</a>
     </div>
-  `;
+  </div>
 
-  const groups = groupDates(manifest.dates);
+  <div class="container">
+    <div id="status" class="status">Loading available dates…</div>
+    <div id="datePickerPanel"></div>
+  </div>
 
-  Object.keys(groups).sort().reverse().forEach(month => {
+  <script>
+    function formatLongDate(dateStr) {
+      const d = new Date(dateStr + "T00:00:00");
+      return d.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      });
+    }
 
-    const dates = groups[month].sort().reverse();
+    function formatMonthLabel(ym) {
+      const d = new Date(ym + "-01T00:00:00");
+      return d.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric"
+      });
+    }
 
-    html += `
-      <details class="month-details">
-        <summary class="month-summary">${month}</summary>
-        <div class="month-body">
-    `;
+    function groupDatesByMonth(dates) {
+      const groups = {};
+      dates.forEach(d => {
+        const key = d.slice(0, 7);
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(d);
+      });
+      return groups;
+    }
 
-    dates.forEach(d => {
-      html += `
-        <div class="date-link ${d===active?"active":""}" onclick="loadReport('${d}')">
-          ${formatDate(d)}
+    function goToReport(dateStr) {
+      window.location.href = `report.html?date=${dateStr}`;
+    }
+
+    function renderDatePicker(manifest) {
+      const panel = document.getElementById("datePickerPanel");
+      const groups = groupDatesByMonth(manifest.dates);
+      const sortedMonths = Object.keys(groups).sort().reverse();
+
+      const latestCard = manifest.latest ? `
+        <div class="date-panel-card" onclick="goToReport('${manifest.latest}')">
+          <div>
+            <div class="eyebrow">Latest Available</div>
+            <div class="latest-title">${formatLongDate(manifest.latest)}</div>
+          </div>
+          <span style="font-size:20px;color:#9ca3af">&rsaquo;</span>
         </div>
-      `;
-    });
+      ` : "";
 
-    html += `</div></details>`;
-  });
+      const monthSections = sortedMonths.map((monthKey, idx) => {
+        const dates = groups[monthKey].sort().reverse();
 
-  panel.innerHTML = html;
-}
+        const rows = dates.map(d => `
+          <div class="date-link" onclick="goToReport('${d}')">
+            <span style="font-size:13px;font-weight:500">${formatLongDate(d)}</span>
+            <span style="font-size:12px;color:#9ca3af">&rsaquo;</span>
+          </div>
+        `).join("");
 
-function renderDashboard(p) {
-  document.getElementById("header-date").innerText = p.report_date;
+        return `
+          <details class="month-details" ${idx === 0 ? "open" : ""}>
+            <summary class="month-summary">
+              <span>${formatMonthLabel(monthKey)}</span>
+              <span style="font-size:11px;color:#9ca3af;font-weight:400">${dates.length} report${dates.length !== 1 ? "s" : ""}</span>
+            </summary>
+            <div class="month-body">
+              ${rows}
+            </div>
+          </details>
+        `;
+      }).join("");
 
-  const rows = p.rows.map(r => `
-    <div class="row">
-      <span>${r.name}</span>
-      <span>$${Math.round(r.sCur).toLocaleString()}</span>
-    </div>
-  `).join("");
+      panel.innerHTML = latestCard + monthSections;
+    }
 
-  document.getElementById("app").innerHTML = `
-    <div class="card">
-      <div>Sales</div>
-      <div class="metric">$${Math.round(p.summary.sales_current).toLocaleString()}</div>
-    </div>
+    async function initPage() {
+      const status = document.getElementById("status");
 
-    <div class="card">
-      ${rows}
-    </div>
-  `;
-}
+      try {
+        const res = await fetch("data/index.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("Could not load available dates");
 
-async function loadReport(dateStr) {
-  document.getElementById("status").innerText = "Loading " + dateStr;
+        const manifest = await res.json();
 
-  try {
-    const res = await fetch(`data/${dateStr}.json`);
-    if (!res.ok) throw new Error("Missing data");
+        if (!manifest.dates || !manifest.dates.length) {
+          document.getElementById("datePickerPanel").innerHTML = "";
+          status.textContent = "No report dates available yet.";
+          return;
+        }
 
-    const data = await res.json();
+        renderDatePicker(manifest);
+        status.textContent = "";
+      } catch (err) {
+        document.getElementById("datePickerPanel").innerHTML = "";
+        status.textContent = `Unable to initialize dashboard: ${err.message}`;
+      }
+    }
 
-    renderDashboard(data);
-
-    const manifest = await (await fetch("data/index.json")).json();
-    renderDatePicker(manifest, dateStr);
-
-    document.getElementById("status").innerText = "";
-
-  } catch(e) {
-    document.getElementById("status").innerText = "Error loading data";
-  }
-}
-
-async function init() {
-  const manifest = await (await fetch("data/index.json")).json();
-  renderDatePicker(manifest, manifest.latest);
-  loadReport(manifest.latest);
-}
-
-init();
-
-</script>
-
+    initPage();
+  </script>
 </body>
 </html>
