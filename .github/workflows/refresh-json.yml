@@ -17,7 +17,7 @@ on:
 
 permissions:
   contents: write
-  
+
 concurrency:
   group: refresh-dashboard-json
   cancel-in-progress: false
@@ -71,6 +71,11 @@ jobs:
             echo "Refreshing $TARGET_DATE"
             python generate_report.py "$TARGET_DATE"
           done
+
+      - name: Remove Python cache files
+        shell: bash
+        run: |
+          find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 
       - name: Commit updated JSON
         shell: bash
