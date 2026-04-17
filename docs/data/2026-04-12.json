@@ -1,0 +1,267 @@
+{
+  "report_date": "2026-04-12",
+  "wow_date": "2026-04-05",
+  "yoy_date": "2025-04-13",
+  "rows": [
+    {
+      "name": "Carbone Dallas",
+      "region": "Southwest",
+      "sCur": 18788.0,
+      "sLw": 30420.01,
+      "sLy": null,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "Carbone London",
+      "region": "International",
+      "sCur": 43814.42,
+      "sLw": 49258.36,
+      "sLy": null,
+      "cCur": 285.0,
+      "cLw": 312.0,
+      "cLy": null
+    },
+    {
+      "name": "Carbone Miami",
+      "region": "Southeast",
+      "sCur": 62913.0,
+      "sLw": 112742.0,
+      "sLy": 68805.82,
+      "cCur": 537.0,
+      "cLw": 922.0,
+      "cLy": 450.0
+    },
+    {
+      "name": "Carbone New York",
+      "region": "Northeast",
+      "sCur": 45023.0,
+      "sLw": 61309.01,
+      "sLy": 45845.39,
+      "cCur": 345.0,
+      "cLw": 216.0,
+      "cLy": 337.0
+    },
+    {
+      "name": "Carbone Vino Coconut Grove",
+      "region": "Southeast",
+      "sCur": 38568.0,
+      "sLw": 54725.45,
+      "sLy": 28109.44,
+      "cCur": 310.0,
+      "cLw": 456.0,
+      "cLy": 220.0
+    },
+    {
+      "name": "Chateau ZZ's",
+      "region": "Southeast",
+      "sCur": 5450.0,
+      "sLw": 14426.0,
+      "sLy": 10345.0,
+      "cCur": 35.0,
+      "cLw": 93.0,
+      "cLy": 66.0
+    },
+    {
+      "name": "Clam Bar",
+      "region": "Northeast",
+      "sCur": null,
+      "sLw": null,
+      "sLy": null,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "Contessa Boston",
+      "region": "Northeast",
+      "sCur": 85961.79,
+      "sLw": 86362.72,
+      "sLy": 62104.78,
+      "cCur": 879.0,
+      "cLw": 792.0,
+      "cLy": 786.0
+    },
+    {
+      "name": "Contessa Miami",
+      "region": "Southeast",
+      "sCur": 28408.9,
+      "sLw": 37055.8,
+      "sLy": 24005.93,
+      "cCur": 296.0,
+      "cLw": 462.0,
+      "cLy": 166.0
+    },
+    {
+      "name": "Dirty French New York",
+      "region": "Northeast",
+      "sCur": 20205.29,
+      "sLw": 18375.91,
+      "sLy": 11540.54,
+      "cCur": 156.0,
+      "cLw": 233.0,
+      "cLy": 163.0
+    },
+    {
+      "name": "Dirty French Steakhouse",
+      "region": "Southeast",
+      "sCur": 7274.0,
+      "sLw": 14088.0,
+      "sLy": 8153.24,
+      "cCur": 48.0,
+      "cLw": 80.0,
+      "cLy": 41.0
+    },
+    {
+      "name": "HaSalon",
+      "region": "Southeast",
+      "sCur": null,
+      "sLw": null,
+      "sLy": 200.0,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "Parm Battery Park",
+      "region": "Parm",
+      "sCur": 11973.41,
+      "sLw": 7861.12,
+      "sLy": 12424.91,
+      "cCur": 104.0,
+      "cLw": 58.0,
+      "cLy": null
+    },
+    {
+      "name": "Parm Copley",
+      "region": "Parm",
+      "sCur": 6217.8,
+      "sLw": 7862.0,
+      "sLy": 9402.83,
+      "cCur": 9.0,
+      "cLw": 21.0,
+      "cLy": null
+    },
+    {
+      "name": "Parm Mulberry",
+      "region": "Parm",
+      "sCur": 15903.5,
+      "sLw": 14292.0,
+      "sLy": 19915.59,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "Parm Upper West",
+      "region": "Parm",
+      "sCur": 32824.0,
+      "sLw": 28937.99,
+      "sLy": 32413.21,
+      "cCur": 414.0,
+      "cLw": 323.0,
+      "cLy": null
+    },
+    {
+      "name": "Parm Woodbury",
+      "region": "Parm",
+      "sCur": 12910.2,
+      "sLw": 6645.2,
+      "sLy": 12586.87,
+      "cCur": 91.0,
+      "cLw": 10.0,
+      "cLy": null
+    },
+    {
+      "name": "Sadelle's Coconut Grove",
+      "region": "Southeast",
+      "sCur": 29594.3,
+      "sLw": 32671.65,
+      "sLy": 32603.13,
+      "cCur": 566.0,
+      "cLw": 608.0,
+      "cLy": 592.0
+    },
+    {
+      "name": "Sadelle's Highland Park",
+      "region": "Southwest",
+      "sCur": 24419.14,
+      "sLw": 30146.56,
+      "sLy": 27680.35,
+      "cCur": 472.0,
+      "cLw": 461.0,
+      "cLy": 424.0
+    },
+    {
+      "name": "Sadelle's New York",
+      "region": "Northeast",
+      "sCur": 38570.57,
+      "sLw": 34859.75,
+      "sLy": 28701.67,
+      "cCur": 681.0,
+      "cLw": 601.0,
+      "cLy": 578.0
+    },
+    {
+      "name": "THE GRILL / THE POOL",
+      "region": "Northeast",
+      "sCur": null,
+      "sLw": -224.95,
+      "sLy": 350.0,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "The Lobster Club",
+      "region": "Northeast",
+      "sCur": null,
+      "sLw": null,
+      "sLy": 350.0,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "Torrisi",
+      "region": "Northeast",
+      "sCur": null,
+      "sLw": 49420.0,
+      "sLy": null,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "Vino Dallas",
+      "region": "Southwest",
+      "sCur": 2411.01,
+      "sLw": 5295.0,
+      "sLy": null,
+      "cCur": null,
+      "cLw": null,
+      "cLy": null
+    },
+    {
+      "name": "ZZ's Club Miami",
+      "region": "Southeast",
+      "sCur": 19605.5,
+      "sLw": 20073.08,
+      "sLy": 13487.04,
+      "cCur": 112.0,
+      "cLw": 113.0,
+      "cLy": 69.0
+    }
+  ],
+  "summary": {
+    "sales_current": 550835.83,
+    "sales_last_week": 716602.66,
+    "sales_last_year": 449025.74,
+    "covers_current": 5340.0,
+    "covers_last_week": 5761.0,
+    "covers_last_year": 3892.0,
+    "restaurants_with_sales": 20,
+    "restaurant_count": 25
+  }
+}
