@@ -2,6 +2,11 @@ name: Refresh dashboard JSON
 
 on:
   workflow_dispatch:
+    inputs:
+      days_back:
+        description: "How many trailing days to refresh"
+        required: false
+        default: "14"
   schedule:
     - cron: "7 11 * * *"
       timezone: "America/New_York"
@@ -34,12 +39,16 @@ jobs:
         id: window
         shell: bash
         run: |
-          HOUR_NY=$(TZ=America/New_York date +%H)
-
-          if [ "$HOUR_NY" = "11" ]; then
-            echo "days_back=14" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "days_back=${{ github.event.inputs.days_back || '14' }}" >> $GITHUB_OUTPUT
           else
-            echo "days_back=2" >> $GITHUB_OUTPUT
+            HOUR_NY=$(TZ=America/New_York date +%H)
+
+            if [ "$HOUR_NY" = "11" ]; then
+              echo "days_back=14" >> $GITHUB_OUTPUT
+            else
+              echo "days_back=2" >> $GITHUB_OUTPUT
+            fi
           fi
 
       - name: Refresh JSON files
@@ -51,6 +60,8 @@ jobs:
           NS_PRIVATE_KEY: ${{ secrets.NS_PRIVATE_KEY }}
         run: |
           DAYS_BACK=${{ steps.window.outputs.days_back }}
+
+          echo "Refreshing trailing $DAYS_BACK day(s)"
 
           for i in $(seq 1 $DAYS_BACK); do
             TARGET_DATE=$(date -u -d "$i day ago" +%F)
