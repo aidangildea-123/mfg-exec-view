@@ -51,8 +51,15 @@
       font-size: 16px;
       font-weight: 700;
     }
+    .year-header {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin: 18px 0 10px;
+      padding: 0 2px;
+    }
     .month-details {
-      margin-bottom: 10px;
       margin: 0 0 12px 0;
     }
     .month-summary {
@@ -71,6 +78,18 @@
       justify-content: space-between;
     }
     .month-summary::-webkit-details-marker { display: none; }
+
+    .chevron {
+      display: inline-block;
+      width: 12px;
+      color: #9ca3af;
+      transition: transform 0.15s ease;
+    }
+
+    .month-details[open] .chevron {
+      transform: rotate(90deg);
+    }
+
     .month-details[open] .month-summary {
       border-radius: 8px 8px 0 0;
     }
@@ -151,6 +170,10 @@
       return groups;
     }
 
+    function getYearFromMonthKey(monthKey) {
+      return monthKey.slice(0, 4);
+    }
+
     function goToReport(dateStr) {
       window.location.href = `report.html?date=${dateStr}`;
     }
@@ -170,8 +193,19 @@
         </div>
       ` : "";
 
-      const monthSections = sortedMonths.map((monthKey, idx) => {
+      let monthSections = "";
+      let currentYear = null;
+
+      sortedMonths.forEach((monthKey) => {
         const dates = groups[monthKey].sort().reverse();
+        const year = getYearFromMonthKey(monthKey);
+
+        if (year !== currentYear) {
+          currentYear = year;
+          monthSections += `
+            <div class="year-header">${year}</div>
+          `;
+        }
 
         const rows = dates.map(d => `
           <div class="date-link" onclick="goToReport('${d}')">
@@ -180,11 +214,11 @@
           </div>
         `).join("");
 
-        return `
+        monthSections += `
           <details class="month-details">
             <summary class="month-summary">
               <span style="display:flex;align-items:center;gap:10px">
-                <span style="font-size:12px;color:#9ca3af;display:inline-block;width:12px">▸</span>
+                <span class="chevron">▸</span>
                 <span>${formatMonthLabel(monthKey)}</span>
               </span>
               <span style="font-size:11px;color:#9ca3af;font-weight:400">${dates.length} report${dates.length !== 1 ? "s" : ""}</span>
@@ -194,9 +228,11 @@
             </div>
           </details>
         `;
-      }).join("");
+      });
 
       panel.innerHTML = latestCard + monthSections;
+
+      panel.querySelectorAll("details").forEach(d => d.removeAttribute("open"));
     }
 
     async function initPage() {
