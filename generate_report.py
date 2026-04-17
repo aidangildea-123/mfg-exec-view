@@ -287,7 +287,7 @@ if __name__ == "__main__":
 
     payload = build_report_payload(target, token)
 
-    if output_format == "json":
+if output_format == "json":
     data_dir = os.path.join(OUTPUT_DIR, "data")
     os.makedirs(data_dir, exist_ok=True)
 
